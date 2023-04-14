@@ -5,9 +5,10 @@ import VideoPlayer from "@/components/room/VideoPlayer";
 import RoomInfo from "@/components/room/RoomInfo";
 import useWebSocket from "@/hooks/useWebSocket";
 
-const host_url = process.env.RENDER_EXTERNAL_HOSTNAME;
-
 export async function getServerSideProps({ req, query }){
+    const host_url = process.env.RENDER_EXTERNAL_HOSTNAME;
+    const ws_url = host_url.startsWith("localhost") ? "ws://"+host_url : "wss://"+host_url;
+    
     try {
         var { id:room_id } = query;
         var user = req.user.data;
@@ -27,7 +28,7 @@ export async function getServerSideProps({ req, query }){
     }
     if(room){
         return {
-            props:{ room, user: _user, invite_token }
+            props:{ room, user: _user, invite_token, host_url, ws_url }
         }
     }else{
         return {
@@ -40,11 +41,11 @@ export async function getServerSideProps({ req, query }){
 
 }
 
-export default function Room({ user, room, invite_token }) {
+export default function Room({ user, room, invite_token, host_url, ws_url }) {
     const [cookies, setCookies, removeCookies] = useCookies(['access_token']);
     // FIXME: Make it simple.
-    const ws_url = (process.env.NODE_ENV === "production" ? (host_url.startsWith("localhost") ? "ws://" + host_url : "wss://" + host_url) : "ws://" + "127.0.0.1:4000") +"/?room_id="+room._id+"&access_token="+cookies.access_token;
-    const ws = useWebSocket(ws_url);
+    const _ws_url = (process.env.NODE_ENV === "production" ? ws_url : "ws://" + "127.0.0.1:4000") +"/?room_id="+room._id+"&access_token="+cookies.access_token;
+    const ws = useWebSocket(_ws_url);
 
     return (
         <div className="flex flex-row w-screen h-screen items-center">
