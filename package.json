@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "node src/server.js",
-    "build": "next build",
+    "build": "npx next build",
     "start": "NODE_ENV=production node src/server.js",
-    "lint": "next lint"
+    "lint": "npx next lint"
   },
   "dependencies": {
     "@next/font": "13.3.0",
