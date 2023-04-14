@@ -3,12 +3,12 @@ var cookieParser = require('cookie-parser');
 const next = require('next');
 const { verifyToken } = require("./utils/encryption.js");
 
-const dev = process.env.NODE_ENV !== 'production'
-const hostname = 'localhost'
-const port = 3000
+const dev = process.env.NODE_ENV !== 'production';
+const hostname = 'localhost';
+const port = process.env.PORT || 3000;
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port })
-const handle = app.getRequestHandler()
+const app = next({ dev, hostname, port });
+const handle = app.getRequestHandler();
 
 const web_socket_server = require("./web_socket/index.js");
 const http = require('http');
