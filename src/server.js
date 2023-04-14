@@ -13,9 +13,6 @@ const handle = app.getRequestHandler()
 const web_socket_server = require("./web_socket/index.js");
 const http = require('http');
 
-// REMOVE_LATER: this is a test for checking the env vars in the host server.
-console.log({ envs: process.env });
-
 app.prepare().then(() => {
   const server = express();
   const http_server = http.createServer(server);
