@@ -1,0 +1,27 @@
+export default {
+    name:"user",
+    title:"user",
+    type:"document",
+    fields:[
+        {
+            name:"profile_image",
+            title:"profile_image",
+            type:"image"
+        },
+        {
+            name:"username",
+            title:"username",
+            type:"string"
+        },
+        {
+            name:"email",
+            title:"email",
+            type:"string"
+        },
+        {
+            name:"password",
+            title:"password",
+            type:"string"
+        }
+    ]
+}
