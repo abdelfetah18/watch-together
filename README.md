@@ -1,6 +1,7 @@
 # **Watch-Together**
 
-`Watch-Together` is a small web app that let you watch videos with your friends at the same time, and chat with them. currently it support `Youtube` only.
+`Watch-Together` is the ultimate platform for shared video experiences. Whether you're miles apart or just next door, our innovative product brings people together in a whole new way. Say goodbye to watching videos alone and hello to interactive entertainment!
+
 
 
 **Preview:** [https://watch-together-uvdn.onrender.com](https://watch-together-uvdn.onrender.com)
