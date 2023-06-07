@@ -1,3 +1,4 @@
+import FAQ from "@/components/landing_page/FAQ"
 import Features from "@/components/landing_page/Features"
 import Footer from "@/components/landing_page/Footer"
 import GetStarted from "@/components/landing_page/GetStarted"
@@ -14,9 +15,11 @@ export default function Home() {
         <Header />
         <GetStarted />
       </div>
-      <div className="flex flex-col w-11/12 py-20">
+      <div className="flex flex-col items-center w-11/12">
         <Features />
         <SupportedList />
+        <FAQ />
+        <a  href="/user/sign_up" className="font-mono font-bold px-16 py-2 rounded-lg bg-sky-600 w-fit text-white my-8 cursor-pointer">Create Account</a>
       </div>
       <Footer />
     </div>
