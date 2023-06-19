@@ -6,7 +6,7 @@ import RoomInfo from "@/components/room/RoomInfo";
 import useWebSocket from "@/hooks/useWebSocket";
 
 export async function getServerSideProps({ req, query }){
-    const host_url = process.env.RENDER_EXTERNAL_HOSTNAME;
+    const host_url = process.env.RENDER_EXTERNAL_HOSTNAME || "localhost";
     const ws_url = host_url.startsWith("localhost") ? "ws://"+host_url : "wss://"+host_url;
     
     try {

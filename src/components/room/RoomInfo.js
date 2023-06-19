@@ -69,30 +69,24 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
             <div className="w-11/12 flex flex-col items-center h-full">
                 <div className="flex flex-row w-full py-4">
                     <div className="w-1/3 flex flex-col items-center bg-gray-900 rounded-l">
-                    <div className="p-2">
-                        <img alt="profile_image" className="w-20 h-20 rounded-full" src={room.profile_image ? room.profile_image.url : "/cover.png"} />
-                    </div>
-                    <div className="w-11/12 text-center font-mono text-base pb-2 text-white">{room.name}</div>
+                        <div className="p-2">
+                            <img alt="profile_image" className="w-20 h-20 rounded-full" src={room.profile_image ? room.profile_image.url : "/profile.jpg"} />
+                        </div>
+                        <div className="w-11/12 text-center font-mono text-base pb-2 text-white">{room.name}</div>
                     </div>
                     <div className="flex flex-col items-center flex-grow bg-gray-700 rounded-r">
-                    <div className="w-11/12 flex flex-row items-center flex-wrap py-2">
-                        <div className="flex-grow"></div>
-                        <FaEllipsisH className="text-white cursor-pointer text-xl" />
-                    </div>
-                    <div className="flex flex-row items-center w-full">
-                        <div className="text-white font-mono font-semibold text-base px-2">online members:</div>
-                        <div className="text-white font-mono text-base px-2">32</div>
-                    </div>
-                    <div className="flex flex-row items-center w-full">
-                        <div className="text-white font-mono font-semibold text-base px-2">members:</div>
-                        <div className="text-white font-mono text-base px-2">{room.members_count}</div>
-                    </div>
+                        <div className="w-11/12 flex flex-row items-center flex-wrap py-2">
+                            <div className="flex-grow"></div>
+                            <FaEllipsisH className="text-white cursor-pointer text-xl" />
+                        </div>
+                        <div className="w-full font-mono text-sm px-2 font-medium text-green-600">32 online members</div>
+                        <div className="w-full text-gray-300 font-mono text-sm px-2">{room.members_count} members</div>
                     </div>
                 </div>
 
                 <div className="w-full flex flex-row items-center">
                     <div onClick={copyInviteUrl} className="cursor-pointer w-1/4 text-white text-center py-1 bg-green-500 rounded-l-lg font-bold font-mono">invite</div>
-                    <input ref={inviteDiv} className="w-3/4 bg-gray-700 rounded-r-lg py-1 px-2" onChange={() => null} type="text" value={truncate(invite_url,30)}/>
+                    <input ref={inviteDiv} className="w-3/4 bg-gray-700 rounded-r-lg py-1 px-2 text-gray-500" onChange={() => null} type="text" value={truncate(invite_url,30)}/>
                 </div>
 
                 <div className="relative flex flex-col items-center w-full flex-grow bg-gray-900 rounded-lg my-4 overflow-auto">
