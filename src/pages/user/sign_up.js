@@ -31,16 +31,18 @@ export default function SignUp(){
                 <div className="font-bold text-white text-3xl">Watch-Together</div>
                 <div className="w-11/12 flex flex-col items-center my-10">
                     <div className={"w-11/12 rounded text-white text-sm font-semibold font-mono"+(alert.status.length > 0 ? " block py-2 px-4 mb-2": "hidden")+(alert.status == "success" ? " bg-green-500" : " bg-red-500")}>{alert.message}</div>
-                    <label className="w-11/12 text-slate-200 font-semibold text-sm">USERNAME:</label>
-                    <input onChange={(evt) => setUsername(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="text" />
-                    <label className="w-11/12 text-slate-200 font-semibold text-sm mt-6">EMAIL:</label>
-                    <input onChange={(evt) => setEmail(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="email" />
-                    <label className="w-11/12 text-slate-200 font-semibold text-sm mt-6">PASSWORD:</label>
-                    <input onChange={(evt) => setPassword(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="password" />
+                    <label className="w-11/12 text-slate-200 font-semibold text-sm pb-2">Username:</label>
+                    <input onChange={(evt) => setUsername(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="text" placeholder="Username" />
+                    <label className="w-11/12 text-slate-200 font-semibold text-sm pb-2 mt-6">Email:</label>
+                    <input onChange={(evt) => setEmail(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="email" placeholder="Email" />
+                    <label className="w-11/12 text-slate-200 font-semibold text-sm pb-2 mt-6">Password:</label>
+                    <input onChange={(evt) => setPassword(evt.target.value)} className="w-11/12 py-2 px-4 rounded-lg font-semibold bg-gray-700 text-slate-300" type="password" placeholder="Password" />
                 </div>
-                <button onClick={sign_up} type="button" className="text-base font-semibold cursor-pointer py-2 bg-blue-600 rounded-lg text-white w-1/3 text-center">Sign up</button>
-                
-                <a href="/user/sign_in" className="font-semibold text-sm pt-2 cursor-pointer text-zinc-300">already have an account?</a>
+                <button onClick={sign_up} type="button" className="text-sm font-semibold cursor-pointer py-2 bg-blue-800 rounded-lg text-white w-1/3 text-center">SIGN UP</button>
+                <div className="font-normal text-sm pt-2 cursor-pointer text-zinc-300">
+                    {"Already have an account ?"}
+                    <a href="/user/sign_in" className="ml-2 font-semibold text-blue-600">Sign in</a>
+                </div>
             </div>
         </div>
     )
