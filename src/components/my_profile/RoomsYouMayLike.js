@@ -23,15 +23,15 @@ export default function RoomsYouMayLike({ user, rooms_you_may_join }){
                         }
 
                         return(
-                            <div key={index} className="w-1/5 flex flex-col py-2 items-center my-4 mx-5">
+                            <div key={index} className="w-1/5 flex flex-col py-2 items-center my-4 mx-5 hover:bg-gray-200 rounded">
                                 <div className="w-full flex flex-col items-center">
-                                    <img alt="profile_image" className="h-20 w-20 rounded-full" src={room.profile_image ? room.profile_image :"/cover.png"} />
+                                    <img alt="profile_image" className="h-20 w-20 rounded-full object-cover" src={room.profile_image ? room.profile_image :"/profile.jpg"} />
                                 </div>
-                                <div className="flex flex-col items-center mx-4 flex-grow h-full">
-                                    <div className="font-bold text-base ">{room.name}</div>
-                                    <div className="font-semibold text-xs text-zinc-400 mx-2">{room.description}</div>
+                                <div className="flex flex-col items-center mx-4 my-2 flex-grow h-full">
+                                    <div className="font-semibold text-lg text-gray-700">{room.name}</div>
+                                    <div className="font-semibold text-xs text-zinc-400 mx-2">{room.total_members + " members"}</div>
                                 </div>
-                                <div onClick={joinRoom} className="cursor-pointer px-4 py-1 bg-gray-300 rounded-lg mt-4">Join</div>
+                                <div onClick={joinRoom} className="text-xs font-mono font-semibold text-gray-200 cursor-pointer px-6 py-1 bg-sky-600 rounded-lg">JOIN</div>
                             </div>
                         )
                     })

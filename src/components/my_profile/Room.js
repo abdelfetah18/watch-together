@@ -62,19 +62,19 @@ export default function Room({ room, user }){
     }
 
     return(
-        <div className="w-5/6 flex flex-row py-2 border-b-2 items-center my-4 cursor-pointer">
-            <a className="w-11/12 flex flex-col items-center" href={"/room/"+room._id}>
+        <div className="w-5/6 flex flex-row py-2 border-b-2 items-center my-4 cursor-pointer hover:bg-gray-200 rounded">
+            <a className="px-2 flex flex-col items-center flex-grow" href={"/room/"+room._id}>
                 <div className="w-full flex flex-row items-center">
                     <div className="h-14 w-14">
-                        <img alt="profile_image" className="w-full h-full rounded-full" src={room.profile_image ? room.profile_image :"/cover.png"} />
+                        <img alt="profile_image" className="w-full h-full rounded-full" src={room.profile_image ? room.profile_image :"/profile.jpg"} />
                     </div>
                     <div className="flex-grow flex flex-col mx-4 h-full">
-                        <div className="font-bold text-base ">{room.name}</div>
-                        <div className="font-semibold text-xs text-zinc-400 mx-2">{room.description}</div>
+                        <div className="font-semibold text-base">{room.name}</div>
+                        <div className="font-medium text-xs text-zinc-400">{room.total_members + " members" }</div>
                     </div>
                 </div>
             </a>
-            <div className="self-end relative">
+            <div className="px-2">
                 <FaEllipsisH onClick={toggleMenu} className="text-zinc-500 h-10 text-xl cursor-pointer" />
                 <motion.div animate={actionsAnim} className="absolute rounded bg-gray-700 hidden opacity-0 flex-col items-center right-0">
                     <a href={"/room/"+room._id+"/edit"} className="px-4 py-1 text-base font-semibold text-white cursor-pointer">Edit</a>
