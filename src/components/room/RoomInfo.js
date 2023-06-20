@@ -68,19 +68,15 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
         <div className="w-1/4 bg-gray-800 h-full flex flex-col items-center">
             <div className="w-11/12 flex flex-col items-center h-full">
                 <div className="flex flex-row w-full py-4">
-                    <div className="w-1/3 flex flex-col items-center bg-gray-900 rounded-l">
-                        <div className="p-2">
-                            <img alt="profile_image" className="w-20 h-20 rounded-full" src={room.profile_image ? room.profile_image.url : "/profile.jpg"} />
+                    <div className="flex flex-col items-center bg-gray-600 rounded-l">
+                        <div className="w-28 h-28">
+                            <img alt="profile_image" className="w-full h-full object-cover rounded-l" src={room.profile_image ? room.profile_image.url : "/profile.jpg"} />
                         </div>
-                        <div className="w-11/12 text-center font-mono text-base pb-2 text-white">{room.name}</div>
                     </div>
-                    <div className="flex flex-col items-center flex-grow bg-gray-700 rounded-r">
-                        <div className="w-11/12 flex flex-row items-center flex-wrap py-2">
-                            <div className="flex-grow"></div>
-                            <FaEllipsisH className="text-white cursor-pointer text-xl" />
-                        </div>
-                        <div className="w-full font-mono text-sm px-2 font-medium text-green-600">32 online members</div>
-                        <div className="w-full text-gray-300 font-mono text-sm px-2">{room.members_count} members</div>
+                    <div className="flex flex-col items-center flex-grow bg-gray-700 rounded-r py-4 px-4">
+                        <div className="w-full font-mono text-base pb-2 text-white">{room.name}</div>
+                        <div className="w-full font-mono text-sm font-medium text-green-600">0 online members</div>
+                        <div className="w-full text-gray-300 font-mono text-sm">{room.members_count} members</div>
                     </div>
                 </div>
 
@@ -88,7 +84,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                     <div onClick={copyInviteUrl} className="cursor-pointer w-1/4 text-white text-center py-1 bg-green-500 rounded-l-lg font-bold font-mono">invite</div>
                     <input ref={inviteDiv} className="w-3/4 bg-gray-700 rounded-r-lg py-1 px-2 text-gray-500" onChange={() => null} type="text" value={truncate(invite_url,30)}/>
                 </div>
-
+ 
                 <div className="relative flex flex-col items-center w-full flex-grow bg-gray-900 rounded-lg my-4 overflow-auto">
                     <div ref={messagesWrapper} className="w-full flex flex-col flex-grow overflow-auto py-4">
                     {
@@ -123,7 +119,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                     }
                     </div>
                     <div className="w-full flex flex-row items-center">
-                    <input onKeyDown={(evt) => { if(evt.code === "Enter"){ sendMessage() }}} onChange={(evt) => setMessage(evt.target.value)} value={message} className="px-4 py-2 rounded-b-lg w-full font-mono" type="text" placeholder="type a message..." />
+                    <input onKeyDown={(evt) => { if(evt.code === "Enter"){ sendMessage() }}} onChange={(evt) => setMessage(evt.target.value)} value={message} className="px-4 py-2 rounded-b-lg w-full font-mono bg-gray-600 text-gray-200 focus:outline-none" type="text" placeholder="type a message..." />
                     </div>
                 </div>
             </div>
