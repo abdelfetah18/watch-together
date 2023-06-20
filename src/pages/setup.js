@@ -79,10 +79,10 @@ export default function Setup({ user, new_access_token }){
                     <div className="text-center text-white font-mono text-sm mb-10">{progress}%</div>
                 </div>
                 <div className="w-1/2 flex flex-row items-center justify-between">
-                    <a href={"/my_profile"}>
+                    <a href={"/profile"}>
                         <button type="button" disabled={disableSkip} className={"mx-4 px-4 py-1 border-2 rounded-lg font-mono font-bold cursor-pointer"+(disableSkip ? " border-blue-900 text-blue-900" : " border-blue-500 text-blue-500")}>Skip</button>
                     </a>
-                    <a href={"/my_profile"}>
+                    <a href={"/profile"}>
                         <button type="button" disabled={disableNext} className={"mx-4 px-4 py-1 rounded-lg font-mono font-bold cursor-pointer"+(disableNext ? " bg-blue-900 text-gray-400" : " bg-blue-500 text-white")}>Next</button>
                     </a>
                 </div>            

@@ -1,6 +1,7 @@
 import client from "@/database/client.mjs";
 
 export default async function handler(req, res) {
+    // TODO: Check if user already in the room.
     if(req.method == "POST"){
         let user = req.user.data;
         let { room_id } = req.body;

@@ -12,7 +12,7 @@ const client = createClient({
 
 const user_props = '{ _id,username,"profile_image":profile_image.asset->url }';
 const user_password_props = '{ _id, username, password, "profile_image": profile_image.asset->url }'; 
-const room_props = '{ _id,"profile_image":profile_image.asset->url,admin->, creator->, name, "total_members": count(members) }';
+const room_props = '{ _id,"profile_image":profile_image.asset->url,admin->, creator->, name, description, "total_members": count(members) }';
 const message_props = '{"user":user->{ _id,username,"profile_image":@.profile_image.asset->url },message,type,_createdAt } | order(@._createdAt asc)';
 
 class Client {
@@ -155,16 +155,19 @@ class Client {
       let message = await this.sanity_client.create(msg_doc);
       return message;
     }
-}
 
-async function clearDatabase(type){
-    try {
-      var r = await client.delete({ query: '*[_type=="'+type+'"]'});
-    } catch(err){
-      console.log(type,err);
-    }
-    return r;
 }
+  
+/*
+async function clearDatabase(type){
+  try {
+    var r = await client.delete({ query: '*[_type=="'+type+'"]'});
+  } catch(err){
+    console.log(type,err);
+  }
+  return r;
+}
+*/
 
 let database_client = new Client(client);
 export default database_client;

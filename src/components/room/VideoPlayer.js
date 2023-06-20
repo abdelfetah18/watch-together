@@ -55,7 +55,7 @@ export default function VideoPlayer({ user, room, ws }){
     return(
         <div className="w-3/4 h-full flex flex-col items-center bg-gray-900 py-4">
             <div className="w-full flex flex-row items-center">
-                <a href={"/my_profile"}>
+                <a href={"/profile"}>
                     <div className="mx-4 text-white font-bold text-xl cursor-pointer">Watch-Together</div>
                 </a>
                 <div className="mx-4 flex-grow bg-gray-100 rounded-lg flex flex-row items-center flex-wrap cursor-pointer">

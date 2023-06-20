@@ -40,7 +40,7 @@ export async function getServerSideProps(ctx){
   export default function Invite({ status, message }){
     
     useEffect(() => {
-        setTimeout(() => window.location.href = "/my_profile",3000);
+        setTimeout(() => window.location.href = "/profile",3000);
     },[]);
 
     return(

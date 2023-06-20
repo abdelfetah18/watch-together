@@ -27,7 +27,7 @@ app.prepare().then(() => {
       try {
         let is_valid = await verifyToken(access_token);
         req.user = is_valid.payload;
-        res.redirect("/my_profile");
+        res.redirect("/profile");
       }catch(err){
         nextR();
       }
@@ -59,7 +59,7 @@ app.prepare().then(() => {
         if(is_valid.payload.type === "setup"){
           nextR();
         }else{
-          res.redirect("/my_profile");
+          res.redirect("/profile");
         }
       }catch(err){
         res.redirect("/user/sign_in");
@@ -101,7 +101,7 @@ app.prepare().then(() => {
   });
 
   server.use('/',async ( req, res, next_handler) => {
-    let protected_paths = ['/my_profile','/room/create'];
+    let protected_paths = ['/my_profile','/profile','/explore','/settings','/room/create','/api/explore'];
     if(protected_paths.includes(req.path)){
       let access_token = req.headers.authorization || req.cookies.access_token;
       if(access_token){

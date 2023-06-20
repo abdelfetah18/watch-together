@@ -18,7 +18,7 @@ export default function SignIn(){
                 setAlert(result.data);
                 if(result.data.status == "success"){
                     setAccessToken("access_token",result.data.data.token,{ path:"/" });
-                    window.location.href = "/my_profile";
+                    window.location.href = "/profile";
                 }
             });
         }
