@@ -31,12 +31,6 @@ export default {
             to:{ type:"user" }
         },
         {
-            name:"members",
-            title:"members",
-            type:"array",
-            of: [{ type:"reference", to: { type:"member" } }]
-        },
-        {
             name:"privacy",
             title:"privacy",
             type:"string",

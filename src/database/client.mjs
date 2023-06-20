@@ -12,7 +12,7 @@ const client = createClient({
 
 const user_props = '{ _id,username,"profile_image":profile_image.asset->url }';
 const user_password_props = '{ _id, username, password, "profile_image": profile_image.asset->url }'; 
-const room_props = '{ _id,"profile_image":profile_image.asset->url,admin->, creator->, name, description, "total_members": count(members) }';
+const room_props = '{ _id,"profile_image":profile_image.asset->url,admin->, creator->, name, description, "total_members": count(*[_type=="member" && @.room._ref==^._id]) }';
 const message_props = '{"user":user->{ _id,username,"profile_image":@.profile_image.asset->url },message,type,_createdAt } | order(@._createdAt asc)';
 
 class Client {

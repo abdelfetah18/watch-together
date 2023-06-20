@@ -10,6 +10,12 @@ export default {
             to:{ type:"user" }
         },
         {
+            name:"room",
+            title:"room",
+            type:"reference",
+            to:{ type:"room" }
+        },
+        {
             name:"permissions",
             title:"permissions",
             type:"array",
