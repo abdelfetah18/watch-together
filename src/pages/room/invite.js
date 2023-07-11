@@ -10,7 +10,7 @@ export async function getServerSideProps(ctx){
         let user = ctx.req.user.data;
         let room = await client.getAlreadyInRooms(user.user_id);
         if(!room){
-            let member = { _type:"member",user:{ _type:"reference",_ref: user.user_id },permissions:["control_video_player","remove_members","edit_room_info"]};
+            let member = { _type:"member", user: { _type:"reference",_ref: user.user_id }, room: { _type:"reference", _ref: room_id }, permissions:["control_video_player","remove_members","edit_room_info"]};
             let new_member = await client.createMember(member);
             let joined_member = await client.addMemberToRoom(room_id,new_member._id);
  

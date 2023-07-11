@@ -7,13 +7,12 @@ export default async function handler(req, res) {
         let { room_id } = req.body;
         let room = await client.getRoom(room_id);
         if(room){
-            let member = { _type:"member",user:{ _type:"reference",_ref: user.user_id },permissions:["control_video_player","remove_members","edit_room_info"]};
+            let member = { _type:"member", user:{ _type:"reference",_ref: user.user_id }, room:{ _type:"reference",_ref: room_id },permissions:["control_video_player","remove_members","edit_room_info"]};
             let createMember = await client.createMember(member);
-            let addMember = await client.addMemberToRoom(room_id, createMember._id);
             res.status(200).json({
                 status: "success",
                 message: "new members!",
-                data: addMember
+                data: createMember
             });
         }else{
             res.status(200).json({
