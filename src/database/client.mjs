@@ -12,8 +12,9 @@ const client = createClient({
 
 const user_props = '{ _id,username,"profile_image":profile_image.asset->url }';
 const user_password_props = '{ _id, username, password, "profile_image": profile_image.asset->url }'; 
-const room_props = '{ _id,"profile_image":profile_image.asset->url,admin->, creator->, name, description, "total_members": count(*[_type=="member" && @.room._ref==^._id]) }';
+const room_props = '{ _id,"profile_image": profile_image.asset->url,admin->, creator->, name, description, "total_members": count(*[_type=="member" && @.room._ref==^._id]) }';
 const message_props = '{"user":user->{ _id,username,"profile_image":@.profile_image.asset->url },message,type,_createdAt } | order(@._createdAt asc)';
+const member_props = '{_id, user->, room->, permissions }'
 
 class Client {
     constructor(sanity_client){
@@ -40,12 +41,12 @@ class Client {
     }
 
     async getAlreadyInRooms(user_id){
-        let rooms = await this.sanity_client.fetch('*[_type=="room" && ($user_id in members[]->user->_id)]'+room_props,{ user_id });
+        let rooms = await this.sanity_client.fetch('*[_type=="room" && _id in *[_type=="member" && $user_id==user._ref].room._ref]'+room_props,{ user_id });
         return rooms;
     }
 
     async getRoomYouMayJoin(user_id){
-        let rooms_you_may_join = await this.sanity_client.fetch('*[_type=="room" && !($user_id in members[]->user->_id) && privacy=="public"]'+room_props+' | order(count(members) desc)',{ user_id });
+        let rooms_you_may_join = await this.sanity_client.fetch('*[_type=="room" && !(_id in *[_type=="member" && $user_id == @.user._ref].room._ref) && privacy=="public"]'+room_props,{ user_id });
         return rooms_you_may_join;
     }
 
@@ -55,28 +56,16 @@ class Client {
     }
 
     async doMemberHasAccess(room_id, user_id, perm){
-      let access = await this.sanity_client.fetch('*[_type=="member" && _id in *[_type=="room" && $room_id==@._id].members[@->user._ref==$user_id]._ref && $perm in permissions].user->',{ room_id, user_id, perm });
+      let access = await this.sanity_client.fetch('*[_type=="member" && room._ref==$room_id && user._ref==$user_id && $perm in permissions].user->',{ room_id, user_id, perm });
       return access;
     }
 
-    async addMemberToRoom(room_id, member_id){
-      try {
-        var r = await this.sanity_client.patch(room_id).setIfMissing({ members:[] }).append("members",[{ _type:"reference",_ref:member_id }]).commit({ autoGenerateArrayKeys: true });
-      } catch(err) {
-        console.log(err);
-        return null;
-      }
-      return r;
-    }
-
     async removeMemberFromRoom(room_id, member_id){
-      try {
-        var r = await this.sanity_client.patch(room_id).unset(['members[_ref=="'+member_id+'"]']).commit();
-      } catch(err){
-        console.log(err);
-        return null;
-      }
-      return r;
+      let member = await this.sanity_client.fetch('*[_type=="member" && room._ref==$room_id && user._ref==$user_id]'+member_props)
+      let deleted = null;
+      if(member)
+        deleted = await this.sanity_client.delete(member._id);
+      return deleted;
     }
 
     async getRoom(room_id){
@@ -95,7 +84,7 @@ class Client {
     
     // FIXME: check the props and made it const as other methods.
     async getRoomIfIn(room_id, user_id){
-      let room = await this.sanity_client.fetch('*[_type=="room" && _id==$room_id && ($user_id in members[]->user->_id) ]{ _id,"profile_image":profile_image.asset->,admin->, creator->, name,"members_count":count(members), "member_id": members[_ref in *[_type=="member" && @.user._ref==$user_id]._id][0]->_id }',{ room_id, user_id });
+      let room = await this.sanity_client.fetch('*[_type=="member" && room._ref==$room_id && user._ref==$user_id].room->'+room_props,{ room_id, user_id });
       if(room.length > 0)
         return room[0];
       return null;
@@ -147,7 +136,7 @@ class Client {
     }
 
     async getMessages(room_id, user_id){
-      let messages = this.sanity_client.fetch('*[_type=="messages" && room._ref==$room_id && ($user_id in room->members[]->user->_id)]'+message_props,{ room_id, user_id });
+      let messages = this.sanity_client.fetch('*[_type=="messages" && room._ref==$room_id && ($user_id in *[_type=="member" && room._ref==$room_id].user,_ref)]'+message_props,{ room_id, user_id });
       return messages;
     }
 
