@@ -41,9 +41,9 @@ export default function Navigation({ user, selected_label }){
 }
 
 const NavItem = ({ selected, path, label }) => {
-    const default_style = "hover:bg-gray-700 cursor-pointer px-10 py-2 text-gray-100 font-semibold text-sm text-center";
+    const default_style = "hover:bg-sky-800 cursor-pointer px-10 py-2 text-gray-100 font-semibold text-sm text-center rounded-r-lg duration-300";
     
     return(
-        <a href={path} className={default_style + (selected ? " bg-gray-900" : "")}>{label}</a>
+        <a href={path} className={default_style + (selected ? " bg-sky-700" : "")}>{label}</a>
     )
 }

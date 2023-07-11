@@ -29,19 +29,19 @@ export default function Profile({ user, rooms }){
             <div className="w-5/6 h-full flex flex-col items-center py-4">
                 <div className="w-11/12 h-full flex flex-col">
                     <div className="w-full text-lg font-semibold text-white">MY ROOMS</div>
-                    <div className="w-full flex-grow overflow-auto flex flex-row flex-wrap my-4">
+                    <div className="w-full flex flex-row flex-wrap my-4">
                         {
                             rooms.map((room, index) => {
                                 return(
-                                    <div key={index} className="w-1/4 h-fit flex flex-col my-2">
-                                        <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center">
-                                            <img className="w-full object-contain" src={room.profile_image ?? "/thumb.png"} />
+                                    <div key={index} className="w-1/4 h-full flex flex-col mb-2">
+                                        <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
+                                            <img className="w-full object-contain rounded-t-lg" src={room.profile_image ?? "/thumb.png"} />
                                             <div className="w-11/12 flex-grow flex flex-col">
                                                 <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
                                                 <div className="text-sm text-gray-400">{room.description}</div>
                                                 <div className="text-sm text-green-400 mt-2">{room.total_members} Members</div>
                                             </div>
-                                            <a href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 text-center mt-4">OPEN</a>
+                                            <a href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 text-center mt-4 rounded-b-lg">OPEN</a>
                                         </div>
                                     </div>
                                 )

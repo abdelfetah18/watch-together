@@ -109,31 +109,31 @@ export default function Create({ user }){
                         <div className="text-center text-white font-mono text-sm">{progress}%</div>
                     </div>
                     <div className="w-11/12 flex flex-col items-center">
-                        <div className="mt-2 font-semibold text-white">Please select a profile image for your room!</div>
+                        <div className="mt-4 font-mono text-gray-300">Chose a profile image</div>
                         <div className="mt-4 mb-10 font-semibold text-white">or</div>
                         <a href={"/room/"+created_room._id}>
-                            <div className="text-white font-semibold bg-blue-500 px-4 py-1 cursor-pointer rounded">{isNext ? "Next" : "Skip"}</div>
+                            <div className="text-gray-200 font-semibold bg-sky-800 hover:bg-sky-700 px-16 py-2 cursor-pointer rounded-lg">{isNext ? "Next" : "Skip"}</div>
                         </a>
                     </div>
                 </motion.div>
                 <motion.div animate={createRoomAnim} className="w-1/4 flex-grow flex opacity-1 flex-col items-center justify-center my-5">
                     <div className={"w-1/4 px-4 text-red-600 font-semibold text-sm"+(alertMsg.status ? "" : " hidden")}>{alertMsg.message}</div>
-                    <input className="my-2 rounded px-4 py-2 w-1/4" onChange={(evt) => setName(evt.target.value)} value={name} placeholder="room name" />
-                    <input className="my-2 rounded px-4 py-2 w-1/4" onChange={(evt) => setDescription(evt.target.value)} value={description} placeholder="room description"/>
+                    <input className="my-2 rounded-lg px-4 py-2 w-1/4 bg-gray-800 text-gray-200 outline-none" onChange={(evt) => setName(evt.target.value)} value={name} placeholder="Room name" />
+                    <input className="my-2 rounded-lg px-4 py-2 w-1/4 bg-gray-800 text-gray-200 outline-none" onChange={(evt) => setDescription(evt.target.value)} value={description} placeholder="Room description"/>
                     <div className="w-1/4 flex flex-row items-center my-2">
-                        <div className="font-bold text-white w-1/3">Room Privacy:</div>
-                        <select className="rounded px-4 py-1 font-semibold" onChange={(evt) => setPrivacy(evt.target.value)} defaultValue={privacy} >
-                            <option value={"public"}>public</option>
-                            <option value={"private"}>private</option>
+                        <div className="font-semibold text-gray-400 mr-4">Privacy:</div>
+                        <select className="flex-grow rounded-lg outline-none px-4 py-2 font-semibold bg-gray-800 text-gray-300" onChange={(evt) => setPrivacy(evt.target.value)} defaultValue={privacy} >
+                            <option value={"public"}>Public</option>
+                            <option value={"private"}>Private</option>
                         </select>
                     </div>
                     {
-                        privacy === "private" ? (<input className="my-2 rounded px-4 py-2 w-1/4" onChange={(evt) => setPassword(evt.target.value)} value={password} placeholder="room password"/>
+                        privacy === "private" ? (<input className="my-2 rounded-lg px-4 py-2 w-1/4 bg-gray-800 text-gray-200 outline-none" type="password" onChange={(evt) => setPassword(evt.target.value)} value={password} placeholder="Room password"/>
                         ) : ""
                     }
 
-                    <div className="w-11/12 flex flex-col items-center my-4">
-                        <div onClick={createRoom} className="text-white font-semibold bg-blue-500 px-4 py-1 cursor-pointer rounded">Next</div>
+                    <div className="w-11/12 flex flex-col items-center mt-12">
+                        <div onClick={createRoom} className="text-gray-200 font-semibold bg-sky-800 hover:bg-sky-700 px-16 py-2 cursor-pointer rounded-lg">Next</div>
                     </div>
                 </motion.div>
             </div>
