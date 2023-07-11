@@ -136,7 +136,7 @@ class Client {
     }
 
     async getMessages(room_id, user_id){
-      let messages = this.sanity_client.fetch('*[_type=="messages" && room._ref==$room_id && ($user_id in *[_type=="member" && room._ref==$room_id].user,_ref)]'+message_props,{ room_id, user_id });
+      let messages = this.sanity_client.fetch('*[_type=="messages" && room._ref == $room_id && ($user_id in *[_type=="member" && room._ref==$room_id].user._ref)]'+message_props,{ room_id, user_id });
       return messages;
     }
 
