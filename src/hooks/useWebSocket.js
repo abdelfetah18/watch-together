@@ -19,35 +19,14 @@ export default function useWebSocket(url){
             console.log("web_socket connection is closed.");
         }
         
-        web_socket.onmessage = (ev) => {
-            try {
-                let payload = JSON.parse(ev.data);
-                if(payload.target === "chat"){
-                    let event = new Event("msg");
-                    event.payload = {
-                        _createdAt: (new Date()).toString(),
-                        user:payload.data.user,
-                        message:payload.data.message,
-                        type:payload.data.message
-                    };
-                    web_socket.dispatchEvent(event);
-                }
-                
-                if(payload.target === "video_player"){
-                    let event = new Event("recv_payload");
-                    event.payload = payload;
-                    web_socket.dispatchEvent(event);
-                }
-                
-                if(payload.target === "state_ready"){
-                    let init_payload = { target:"video_player", data:{ action:"sync", data:{}}};
-                    let event = new Event("init_payload");
-                    event.payload = init_payload;
-                    web_socket.dispatchEvent(event);
-                }
-            }catch(err){
-                web_socket.close();
-            }
+        web_socket.emit = (eventName,payload) => {
+            let data = JSON.stringify({ eventName,payload });
+            web_socket.send(data);
+        }
+
+        web_socket.onmessage = (evt) => {
+            let { eventName, payload } = JSON.parse(evt.data);
+            web_socket.dispatchEvent(new CustomEvent(eventName,{ detail: payload }))
         }
 
         setWS(web_socket);

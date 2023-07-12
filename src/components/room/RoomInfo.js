@@ -20,13 +20,13 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
             }
         }).catch(err => console.log({ error: err }));
         if(ws){
-            ws.addEventListener("msg",(ev) => {
+            ws.addEventListener("chat",({ detail: payload }) => {
                 setMessages(state => {
-                    return [...state,ev.payload]
+                    return [...state, JSON.parse(payload)]
                 });
             });
             return () => {
-                ws.removeEventListener("msg", (ev) => {
+                ws.removeEventListener("chat", (ev) => {
                     console.log("event listener removed.");
                 },{});
             }
@@ -49,7 +49,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
     function sendMessage(){
         if(ws && ws.readyState === ws.OPEN){
           if(message.length > 0){
-            var data = { target:"chat", room_id:room._id, data:{ type:"text",message } };
+            let data = { eventName:"chat", payload:{ type:"text", message } };
             ws.send(JSON.stringify(data));
             setMessages(state => {
               return [...state,{

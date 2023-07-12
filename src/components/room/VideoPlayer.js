@@ -7,30 +7,9 @@ export default function VideoPlayer({ user, room, ws }){
     const [videos,setVideos] = useState([]);
     const [currentVideo,setCurrentVideo] = useState(null);
     const [search,setSearch] = useState("");
-    const [is_player_ready,setPlayerReady] = useState(false);
-    const [recv_payload,setRecvPayload] = useState(null);
-    const [init_payload,setInitPayload] = useState(null);
-    const [player,setPlayer] = useState(null);
-    const [url,setUrl] = useState("");
-    const [player_state,setPlayerState] = useState(null);
-    
 
     useEffect(() => {
-        if(ws){
-            ws.addEventListener("init_payload",(ev) => {
-                setInitPayload(ev.payload);
-            });
-            ws.addEventListener("recv_payload",(ev) => {
-                setRecvPayload(ev.payload);
-            });
-            return () => {
-                ws.removeEventListener("init_payload");
-                ws.removeEventListener("recv_payload");
-            }
-        }
-    },[ws]);
-
-    useEffect(() => {
+        console.log({ws})
         if(videos.length > 0){
           setCurrentVideo(null);
         }
@@ -69,11 +48,7 @@ export default function VideoPlayer({ user, room, ws }){
                     {
                         videos.map((v,index) => {
                             function selectVideo(){
-                                setCurrentVideo({
-                                    url: 'https://www.youtube.com/watch?v='+v.id.videoId,
-                                    currentTime: 0,
-                                    video_state: 1
-                                });
+                                setCurrentVideo('https://www.youtube.com/watch?v='+v.id.videoId);
                                 setSearch("");
                                 setVideos([]);
                             }
@@ -88,8 +63,8 @@ export default function VideoPlayer({ user, room, ws }){
                     }
                 </div>
 
-                <div className={"w-full h-5/6 "+(currentVideo ? "" : "hidden")}>
-                    <YoutubePlayer c_v={[currentVideo,setCurrentVideo]} p_r={[is_player_ready,setPlayerReady]} ws={ws} r_pay={[recv_payload,setRecvPayload]} i_pay={[init_payload,setInitPayload]} p={[player,setPlayer]} url={url} p_s={[player_state,setPlayerState]} is_admin={room.admin._id === user._id} />
+                <div className={"w-full h-5/6 bg-sky-900 "+(search.length > 0 ? "hidden" : "")}>
+                    <YoutubePlayer selectedVideo={currentVideo} ws={ws} is_admin={room.admin._id === user._id} />
                 </div>
             </div>
         </div>

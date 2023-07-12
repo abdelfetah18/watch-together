@@ -36,8 +36,8 @@ class Client {
     }
 
     async createUser(user_doc){
-        let user = await this.sanity_client.create(user_doc);
-        return user;
+      let user = await this.sanity_client.create(user_doc);
+      return user;
     }
 
     async getAlreadyInRooms(user_id){
@@ -82,11 +82,17 @@ class Client {
       return null;
     }
     
-    // FIXME: check the props and made it const as other methods.
     async getRoomIfIn(room_id, user_id){
       let room = await this.sanity_client.fetch('*[_type=="member" && room._ref==$room_id && user._ref==$user_id].room->'+room_props,{ room_id, user_id });
       if(room.length > 0)
         return room[0];
+      return null;
+    }
+
+    async getRoomAdmin(room_id){
+      let users = await this.sanity_client.fetch('*[_type=="room" && _id == $room_id].admin->'+user_props,{ room_id });
+      if(users.length > 0)
+          return users[0];
       return null;
     }
 
@@ -108,7 +114,7 @@ class Client {
     // NOTE: since i am using 'profile_image' every were there no problem using this hack.
     async uploadProfile(filePath,doc_id){
       try {
-        var imageAsset = await client.assets.upload('image', createReadStream(filePath),{ filename: basename(filePath) });
+        var imageAsset = await this.sanity_client.assets.upload('image', createReadStream(filePath),{ filename: basename(filePath) });
       } catch(err) {
         console.log('db_error:',err)
       }
@@ -136,7 +142,7 @@ class Client {
     }
 
     async getMessages(room_id, user_id){
-      let messages = this.sanity_client.fetch('*[_type=="messages" && room._ref == $room_id && ($user_id in *[_type=="member" && room._ref==$room_id].user._ref)]'+message_props,{ room_id, user_id });
+      let messages = await this.sanity_client.fetch('*[_type=="messages" && room._ref == $room_id && ($user_id in *[_type=="member" && room._ref==$room_id].user._ref)]'+message_props,{ room_id, user_id });
       return messages;
     }
 
@@ -145,6 +151,12 @@ class Client {
       return message;
     }
 
+    async getMessageById(message_id){
+      let messages = await this.sanity_client.fetch('*[_type=="messages" && _id==$message_id]'+message_props,{ message_id });
+      if(messages.length > 0)
+        return messages[0];
+      return null;
+    }
 }
   
 /*
