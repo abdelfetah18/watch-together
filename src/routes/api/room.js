@@ -2,7 +2,7 @@ const { verifyToken } = require("../../utils/encryption");
 
 module.exports = async ( req, res, next) => {
     let access_token = req.headers.authorization || req.cookies.access_token;
-    if(access_token){
+    if(!access_token){
         res.redirect("/user/sign_in");
         next();
     }
