@@ -70,7 +70,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                 <div className="flex flex-row w-full py-4">
                     <div className="flex flex-col items-center bg-gray-600 rounded-l">
                         <div className="w-28 h-28">
-                            <img alt="profile_image" className="w-full h-full object-cover rounded-l" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/thumb.png"} />
+                            <img alt="profile_image" className="w-full h-full object-cover rounded-l" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/profile_4_3.png"} />
                         </div>
                     </div>
                     <div className="flex flex-col items-center flex-grow bg-gray-700 rounded-r py-4 px-4">
