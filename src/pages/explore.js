@@ -72,7 +72,7 @@ export default function Explore({ user }){
                                 return(
                                     <div key={index} className="w-1/4 flex flex-col mb-4">
                                         <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
-                                            <img className="w-full object-contain rounded-t-lg" src={room.profile_image ?? "/thumb.png"} />
+                                            <img className="w-full rounded-t-lg" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/thumb.png"} />
                                             <div className="w-11/12 flex-grow flex flex-col">
                                                 <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
                                                 <div className="text-sm text-gray-400">{room.description}</div>

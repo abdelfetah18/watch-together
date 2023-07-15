@@ -70,7 +70,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                 <div className="flex flex-row w-full py-4">
                     <div className="flex flex-col items-center bg-gray-600 rounded-l">
                         <div className="w-28 h-28">
-                            <img alt="profile_image" className="w-full h-full object-cover rounded-l" src={room.profile_image ?? "/thumb.png"} />
+                            <img alt="profile_image" className="w-full h-full object-cover rounded-l" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/thumb.png"} />
                         </div>
                     </div>
                     <div className="flex flex-col items-center flex-grow bg-gray-700 rounded-r py-4 px-4">
@@ -105,7 +105,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                                     <div key={index} className="flex flex-col w-full items-start my-1">
                                     <div className="w-2/3 flex flex-row items-center">
                                         <div className="py-1 px-1">
-                                        <img alt="profile_image" className="w-8 h-8 rounded-full" src={m.user.profile_image ? m.user.profile_image : "/user.png"} />
+                                        <img alt="profile_image" className="w-8 h-8 rounded-full" src={m.user.profile_image ? m.user.profile_image+"?h=100&w=100&fit=crop&crop=center" : "/user.png"} />
                                         </div>
                                         <div className="bg-gray-600 rounded-lg rounded-bl-none px-4 py-2 text-center text-slate-200 text-sm mx-1">{m.message}</div>
                                     </div>

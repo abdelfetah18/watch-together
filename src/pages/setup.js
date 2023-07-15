@@ -16,7 +16,7 @@ export async function getServerSideProps({ req, query }){
     }else{
         return {
             redirect: {
-                destination: '/my_profile',
+                destination: '/profile',
                 permanent: false
             }
         }

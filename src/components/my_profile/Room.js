@@ -66,7 +66,7 @@ export default function Room({ room, user }){
             <a className="px-2 flex flex-col items-center flex-grow" href={"/room/"+room._id}>
                 <div className="w-full flex flex-row items-center">
                     <div className="h-14 w-14">
-                        <img alt="profile_image" className="w-full h-full rounded-full" src={room.profile_image ? room.profile_image :"/profile.jpg"} />
+                        <img alt="profile_image" className="w-full h-full rounded-full" src={room.profile_image ? room.profile_image : "/profile.jpg"} />
                     </div>
                     <div className="flex-grow flex flex-col mx-4 h-full">
                         <div className="font-semibold text-base">{room.name}</div>
