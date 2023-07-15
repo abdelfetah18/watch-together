@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import UserInfo from "@/components/my_profile/UserInfo";
-import CropImage from "@/components/CropImage";
 import client from "@/database/client.mjs";
 import { motion, useAnimation } from "framer-motion";
 
@@ -136,9 +135,6 @@ export default function Create({ user }){
                     <div className="w-11/12 flex flex-col items-center mt-12">
                         <div onClick={createRoom} className="text-gray-200 font-semibold bg-sky-800 hover:bg-sky-700 px-16 py-2 cursor-pointer rounded-lg">Next</div>
                     </div>
-                </motion.div>
-                <motion.div>
-                    <CropImage onResult={(result) => { setProfileImageUrl(result.url) }} image_url={profile_image_url} />
                 </motion.div>
             </div>
         </div>
