@@ -23,7 +23,7 @@ export default function Navigation({ user, selected_label }){
     return (
         <div className="w-1/6 h-full bg-gray-800 flex flex-col relative">
             <div className="px-4 w-full flex flex-col items-center py-10">
-                <img className="w-16 h-16 rounded-full" src="/user.png" />
+                <img className="w-16 h-16 rounded-full" src="/profile_1_1.png" />
                 <div className="text-lg text-gray-200 font-semibold mt-2">{user.username}</div>
             </div>
             <div className="w-full flex flex-col">

@@ -99,7 +99,7 @@ export default function Create({ user }){
             <div className="w-11/12 flex flex-row flex-grow items-center flex-wrap">
                 <motion.div animate={choseImageAnim} className="hidden opacity-0 w-1/2 flex-grow flex-col items-center justify-center my-5">
                     <div className="flex flex-col items-center relative">
-                        <img alt="profile_image" className="h-40 w-40 rounded-full object-cover" src={profile_image_url.length > 0 ? profile_image_url : "/user.png"} />
+                        <img alt="profile_image" className="h-40 w-40 rounded-full object-cover" src={profile_image_url.length > 0 ? profile_image_url : "/profile_1_1.png"} />
                         <input className="hidden" ref={imageInput} onChange={uploadImage} type="file" />
                         <div onClick={(evt) => imageInput.current.click()} className="absolute bottom-4 right-2 bg-blue-500 p-2 rounded-full cursor-pointer">
                             <FaCamera className="text-white" />
