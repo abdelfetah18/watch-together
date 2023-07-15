@@ -19,13 +19,6 @@ in my custom server i combined `expressJS` with `WebSocketServer` and `NextJS` h
 
 ## **Database**
 
-in my database i have four schemas:
-
-    - user.
-    - room.
-    - messages.
-    - member.
-
 ![database](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/database.png)
 
 
