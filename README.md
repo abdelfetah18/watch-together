@@ -8,14 +8,8 @@
 
 ## **How it works ?**
 
-the User Interface build with `NextJS(ReactJS)` and `TaillwindCss`.
-and for realTime data transmission i am using `WebSocket` technology. and i am using `Sanity.io` as a database.
 
-### **!! Important !!**
-
-since it is `NextJS`, you may wondering how i am implementing the `WebSocket` server, basically what i did is use a [custom server](https://nextjs.org/docs/advanced-features/custom-server) advanced feature from nextjs. which also let me handle middlewares in more easy way since NextJS using the EDGE envirment for middlewares.
-in my custom server i combined `expressJS` with `WebSocketServer` and `NextJS` handle.
-
+Its a `NextJS` app with [custom server](https://nextjs.org/docs/advanced-features/custom-server) `ExpressJS` that can handle `WebSocket` on the same server.also `TaillwindCss` is used for styling the UI pages and `SanityIO` as a database.
 
 ## **Database**
 
@@ -32,5 +26,6 @@ in my custom server i combined `expressJS` with `WebSocketServer` and `NextJS` h
 ![6](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/6.png)
 ![7](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/7.png)
 ![8](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/8.png)
+
 Thanks for reading and see you in my next project.
 
