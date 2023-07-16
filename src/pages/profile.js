@@ -33,22 +33,28 @@ export default function Profile({ user, rooms }){
                         {
                             rooms.map((room, index) => {
                                 return(
-                                    <div key={index} className="w-1/4 flex flex-col mb-4">
-                                        <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
-                                            <img className="w-full object-contain rounded-t-lg" src={room.profile_image ? room.profile_image + "?h=300&w=400&fit=crop&crop=center" : "/profile_4_3.png"} />
-                                            <div className="w-11/12 flex-grow flex flex-col">
-                                                <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
-                                                <div className="text-sm text-gray-400">{room.description}</div>
-                                                <div className="text-sm text-green-400 mt-2">{room.total_members} Members</div>
-                                            </div>
-                                            <a href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 text-center mt-4 rounded-b-lg">OPEN</a>
-                                        </div>
-                                    </div>
+                                    <Room key={index} room={room} />
                                 )
                             })
                         }
                     </div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+const Room = ({ room }) => {
+    return (
+        <div className="w-1/4 flex flex-col mb-4">
+            <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
+                <img className="w-full object-contain rounded-t-lg" src={room.profile_image ? room.profile_image + "?h=300&w=400&fit=crop&crop=center" : "/profile_4_3.png"} />
+                <div className="w-11/12 flex-grow flex flex-col">
+                    <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
+                    <div className="text-sm text-gray-400">{room.description}</div>
+                    <div className="text-sm text-green-400 mt-2">{room.total_members} Members</div>
+                </div>
+                <a href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 text-center mt-4 rounded-b-lg">OPEN</a>
             </div>
         </div>
     )

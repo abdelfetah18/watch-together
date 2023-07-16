@@ -52,40 +52,41 @@ export default function Explore({ user }){
                 <div className="w-11/12 flex-grow overflow-auto flex flex-col">
                     <div className="w-full text-lg font-semibold text-white">EXPLORE</div>
                     <div className="w-full flex flex-row flex-wrap my-4">
-                        {
-                            rooms.map((room, index) => {
-
-                                function joinRoom(ev){
-                                    axios.post("/api/room/join",{ room_id:room._id },{
-                                        headers:{
-                                            authorization:user.access_token
-                                        }
-                                    }).then((res) => {
-                                        if(res.data.status == "success"){
-                                            getRooms();
-                                        }
-                                    }).catch((err) => {
-                                        console.log(err);
-                                    });
-                                }
-
-                                return(
-                                    <div key={index} className="w-1/4 flex flex-col mb-4">
-                                        <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
-                                            <img className="w-full rounded-t-lg" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/profile_4_3.png"} />
-                                            <div className="w-11/12 flex-grow flex flex-col">
-                                                <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
-                                                <div className="text-sm text-gray-400">{room.description}</div>
-                                                <div className="text-sm text-green-400 mt-2">{room.total_members} Members</div>
-                                            </div>
-                                            <button type="button" onClick={joinRoom} href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 hover:bg-sky-900 text-center cursor-pointer mt-4 rounded-b-lg">JOIN</button>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
+                    {
+                        rooms.map((room, index) => <Room key={index} room={room} />)
+                    }
                     </div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+const Room = ({ room }) => {
+    function joinRoom(ev){
+        axios.post("/api/room/join",{ room_id:room._id },{
+            headers:{
+                authorization:user.access_token
+            }
+        }).then((res) => {
+            if(res.data.status == "success"){
+                getRooms();
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    return (
+        <div className="w-1/4 flex flex-col mb-4">
+            <div className="w-11/12 h-full bg-gray-700 flex flex-col items-center rounded-lg">
+                <img className="w-full rounded-t-lg" src={room.profile_image ? room.profile_image+"?h=300&w=400&fit=crop&crop=center" : "/profile_4_3.png"} />
+                <div className="w-11/12 flex-grow flex flex-col">
+                    <div className="text-base text-gray-100 font-medium py-2">{room.name}</div>
+                    <div className="text-sm text-gray-400">{room.description}</div>
+                    <div className="text-sm text-green-400 mt-2">{room.total_members} Members</div>
+                </div>
+                <button type="button" onClick={joinRoom} href={"/room/"+room._id} className="w-full text-white font-semibold py-2 bg-sky-800 hover:bg-sky-900 text-center cursor-pointer mt-4 rounded-b-lg">JOIN</button>
             </div>
         </div>
     )
