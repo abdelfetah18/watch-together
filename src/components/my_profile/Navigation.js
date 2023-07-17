@@ -1,4 +1,4 @@
-import { FaUsers } from "react-icons/fa";
+import { FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const navigations = [
     {
@@ -35,7 +35,10 @@ export default function Navigation({ user, selected_label }){
                     })
                 }
             </div>
-            <a href="/user/sign_out"  className="absolute bottom-0 w-full text-center font-semibold py-4 text-sm text-white">Logout</a>
+            <a href="/user/sign_out"  className="absolute bottom-0 w-full py-4 text-gray-100 hover:text-sky-600 flex flex-row items-center justify-center">
+                <FaSignOutAlt />
+                <div className="font-semibold text-sm ml-2">Logout</div>
+            </a>
         </div>
     )
 }
