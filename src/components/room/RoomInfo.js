@@ -80,6 +80,8 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                     </div>
                 </div>
 
+                <a href={"/room/"+room._id+"/edit"} className="py-2 w-full text-center rounded-lg bg-sky-800 hover:bg-sky-700 cursor-pointer text-gray-50 font-semibold mb-4 text-xs">EDIT ROOM</a>
+
                 <div className="w-full flex flex-row items-center">
                     <div onClick={copyInviteUrl} className="cursor-pointer w-1/4 text-white text-center py-1 bg-green-500 rounded-l-lg font-bold font-mono">invite</div>
                     <input ref={inviteDiv} className="w-3/4 bg-gray-700 rounded-r-lg py-1 px-2 text-gray-500" onChange={() => null} type="text" value={truncate(invite_url,30)}/>

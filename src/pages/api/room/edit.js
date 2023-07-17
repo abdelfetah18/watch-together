@@ -3,11 +3,11 @@ import client from "@/database/client.mjs";
 export default async function handler(req, res) {
     if(req.method == "POST"){
         let user = req.user.data;
-        let { room_id, name, desc, profile_image } = req.body;
+        let { room_id, name, description, profile_image } = req.body;
         let room = await client.getRoomIfAdmin(room_id, user.user_id);
         if(room){
             // FIXME: 'profile_image' field not handled correctly.
-            let new_doc = { name,
+            let new_doc = { name, description
                 // profile_image: { _type: 'image', asset: { _type: "reference", _ref: profile_image._id }}
             };
             let result = await client.updateRoom(room._id, new_doc);

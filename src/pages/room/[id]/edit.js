@@ -25,13 +25,13 @@ export async function getServerSideProps({ req, query }){
 export default function Edit({ user, room }){
     var imageInput = useRef();
     var [name,setName] = useState(room.name);
-    var [desc,setDesc] = useState("");
+    var [description,setDescription] = useState(room.description);
     var [profile_image,setProfileImage] = useState(room.profile_image);
     var [progress,setProgress] = useState(0);
     var progressBar = useRef();
 
     function editRoom(){
-        axios.post("/api/room/edit",{ room_id: room._id, name, desc, profile_image },{
+        axios.post("/api/room/edit",{ room_id: room._id, name, description, profile_image },{
             headers:{
                 authorization: user.access_token
             }
@@ -74,7 +74,7 @@ export default function Edit({ user, room }){
                 </a>
                 <div className="w-5/6 flex flex-col items-center">
                     <div className="flex flex-col items-center relative">
-                        <img alt="profile_image" className="h-40 w-40 rounded-full object-cover" src={profile_image ? profile_image.url : "/profile_1_1.png"} />
+                        <img alt="profile_image" className="h-40 w-40 rounded-full object-cover" src={profile_image ? profile_image+"?h=300&w=400&fit=crop&crop=center" : "/profile_1_1.png"} />
                         <input onChange={uploadImage} className="hidden" ref={imageInput} type="file" />
                         <div onClick={(evt) => imageInput.current.click()} className="absolute bottom-4 right-2 bg-blue-500 p-2 rounded-full cursor-pointer">
                             <FaCamera className="text-white" />
@@ -85,10 +85,10 @@ export default function Edit({ user, room }){
                         <div className="text-center text-white font-mono text-sm mb-10">{progress}%</div>
                     </div>
                     <div className="w-5/6 my-4 flex flex-col items-center">
-                        <input value={name} onChange={(evt) => setName(evt.target.value)} className="my-2 px-4 py-2 rounded w-1/2" placeholder="room name" />
-                        <input disabled={true} value={desc} onChange={(evt) => setDesc(evt.target.value)} className="my-2 px-4 py-2 rounded w-1/2" placeholder="room description" />
+                        <input value={name} onChange={(evt) => setName(evt.target.value)} className="my-2 px-4 py-2 rounded-lg outline-none text-gray-50 w-1/2 bg-gray-800" placeholder="Name" />
+                        <input value={description} onChange={(evt) => setDescription(evt.target.value)} className="my-2 px-4 py-2 rounded-lg outline-none text-gray-50 w-1/2 bg-gray-800" placeholder="Description" />
                     </div>
-                    <div onClick={editRoom} className="px-4 py-1 cursor-pointer bg-green-700 rounded text-white font-semibold text-base">Save</div>
+                    <div onClick={editRoom} className="px-14 py-2 cursor-pointer bg-blue-800 hover:bg-blue-700 rounded-lg text-white font-medium">Save</div>
                 </div>
             </div>
         </div>
