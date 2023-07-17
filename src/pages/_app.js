@@ -2,6 +2,10 @@ import '@/styles/globals.css'
 import { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 
+export function reportWebVitals(metric) {
+  console.log(metric);
+}
+
 function MyApp({ Component, pageProps }) {
   var [user,setUser] = useState("");
   const [cookies, setCookies, removeCookies] = useCookies(['access_token']);

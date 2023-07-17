@@ -35,7 +35,6 @@ function createWebSocketServer(server){
         let online_room = ONLINE_ROOMS.get(room._id);
         if(online_room == undefined){
             let admin = await (await db_client).default.getRoomAdmin(room_id);
-            console.log({ admin });
             ONLINE_ROOMS.set(room._id, new Room(room._id, admin._id));
         }
         online_room = ONLINE_ROOMS.get(room._id);
@@ -46,8 +45,6 @@ function createWebSocketServer(server){
 
         client.on('message',(data) => {
             let { eventName, payload } = JSON.parse(data.toString());
-            console.log({ eventName, payload });
-
             client.emit(eventName, payload);
         });
 
@@ -56,9 +53,6 @@ function createWebSocketServer(server){
             let msg_doc = { _type:"messages", room:{ _type:"reference", _ref: room_id }, user:{ _type:"reference", _ref: client.user.user_id }, message, type };
             let message_ = await (await db_client).default.createMessage(msg_doc);
             let msg = await (await db_client).default.getMessageById(message_._id);
-            console.log({
-                message_, msg
-            })
             online_room.broadcast(client, "chat", JSON.stringify(msg));
         });
 
