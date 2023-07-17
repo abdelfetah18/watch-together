@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { FaEllipsisH } from "react-icons/fa"
+import { FaEllipsisH, FaUserPlus } from "react-icons/fa"
 
 export default function RoomInfo({ user, room, invite_token, ws, host_url }){
     const [invite_url,setInviteUrl] = useState((process.env.NODE_ENV === "production" ? "https://"+host_url : "http://localhost:3000")+"/room/invite?token="+invite_token);
@@ -83,8 +83,8 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
                 <a href={"/room/"+room._id+"/edit"} className="py-2 w-full text-center rounded-lg bg-sky-800 hover:bg-sky-700 cursor-pointer text-gray-50 font-semibold mb-4 text-xs">EDIT ROOM</a>
 
                 <div className="w-full flex flex-row items-center">
-                    <div onClick={copyInviteUrl} className="cursor-pointer w-1/4 text-white text-center py-1 bg-green-500 rounded-l-lg font-bold font-mono">invite</div>
-                    <input ref={inviteDiv} className="w-3/4 bg-gray-700 rounded-r-lg py-1 px-2 text-gray-500" onChange={() => null} type="text" value={truncate(invite_url,30)}/>
+                    <div onClick={copyInviteUrl} className="cursor-pointer w-1/6 text-white text-center py-1 bg-green-500 rounded-l-lg font-semibold font-mono flex flex-col items-center"><FaUserPlus className="text-2xl" /></div>
+                    <input ref={inviteDiv} className="w-5/6 bg-gray-700 rounded-r-lg py-1 px-2 text-gray-500" onChange={() => null} type="text" value={truncate(invite_url,30)}/>
                 </div>
  
                 <div className="relative flex flex-col items-center w-full flex-grow bg-gray-900 rounded-lg my-4 overflow-auto">
