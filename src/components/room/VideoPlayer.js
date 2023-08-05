@@ -3,6 +3,11 @@ import YoutubePlayer from "./YoutubePlayer";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 
+const FREE_API_ALERT_MESSAGE =  "I am using the youtube free search API\n"+
+                                "and it has a limited requests. so instead\n"+
+                                "copy the url from YOUTUBE directly.\n"+
+                                "\nNOTE: Some videos may not work because of youtube policy stuffs.";
+
 export default function VideoPlayer({ user, room, ws }){
     const [videos,setVideos] = useState([]);
     const [currentVideo,setCurrentVideo] = useState(null);
@@ -15,18 +20,31 @@ export default function VideoPlayer({ user, room, ws }){
         }
     },[videos]);
 
+    function isYoutubeUrl(){
+        if(search.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)/g)){
+            let url = new URL(search);
+            let videoId = url.searchParams.get("v");
+            if(videoId){
+                return true;
+            }
+        }
+        return false;
+    }
+
     function searchYoutube(){
         if(search.length > 0){
-            axios.get("/api/room/youtube_search?q="+search,{
-                headers:{
-                authorization: user.access_token
-                }
-            }).then(res => {
+            if(isYoutubeUrl()){
+                setCurrentVideo(search);
+                setSearch("");
+                return;
+            }
+            axios.get("/api/room/youtube_search?q="+search,{ headers:{ authorization: user.access_token } }).then(res => {
                 if(res.data.status == "success"){
                     setVideos(res.data.videos);
                 }
             }).catch(err => {
                 console.log(err);
+                alert(FREE_API_ALERT_MESSAGE);
             });
         }
     }
@@ -39,7 +57,7 @@ export default function VideoPlayer({ user, room, ws }){
                 </a>
                 <div className="mx-4 flex-grow bg-gray-100 rounded-lg flex flex-row items-center flex-wrap cursor-pointer">
                     <FaSearch className="text-base w-1/12 text-gray-400" />
-                    <input onKeyDown={(evt) => { if(evt.code==="Enter"){ searchYoutube(); }}} value={search} onChange={(evt) => setSearch(evt.target.value)} className="font-mono text-base font-medium bg-gray-100 flex-grow h-full rounded-lg px-4 py-2 focus-visible:outline-none" type="text" placeholder="Search..." />
+                    <input onKeyDown={(evt) => { if(evt.code==="Enter"){ searchYoutube(); }}} value={search} onChange={(evt) => setSearch(evt.target.value)} className="font-mono text-base font-medium bg-gray-100 flex-grow h-full rounded-lg px-4 py-2 focus-visible:outline-none" type="text" placeholder="Search or Paste a YOUTUBE URL and hit Enter" />
                 </div>
             </div>
 
