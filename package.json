@@ -24,7 +24,8 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "ws": "^8.13.0",
-    "youtube-search-without-api-key": "^1.1.0"
+    "youtube-search-without-api-key": "^1.1.0",
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
