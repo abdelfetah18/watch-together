@@ -55,8 +55,8 @@ function createWebSocketServer(server){
             let { message, type } = payload;
             let msg_doc = { _type:"messages", room:{ _type:"reference", _ref: room_id }, user:{ _type:"reference", _ref: client.user.user_id }, message, type };
             let message_ = await (await db_client).default.createMessage(msg_doc);
-            let msg = await (await db_client).default.getMessageById(message_._id);
-            online_room.broadcast(client, "chat", JSON.stringify(msg));
+            let msg = await (await db_client).default.getMessageById(message_._id);            
+            online_room.broadcast(client, "chat", msg);
         });
 
         client.on("video_player", async (payload) => {

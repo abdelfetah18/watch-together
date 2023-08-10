@@ -22,7 +22,7 @@ export default function RoomInfo({ user, room, invite_token, ws, host_url }){
         if(ws){
             ws.addEventListener("chat",({ detail: payload }) => {
                 setMessages(state => {
-                    return [...state, JSON.parse(payload)]
+                    return [...state, payload]
                 });
             });
             return () => {
