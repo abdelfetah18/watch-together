@@ -32,6 +32,9 @@ function createWebSocketServer(server){
             return;
         }
 
+        client.member_has_access = await (await db_client).default.doMemberHasAccess(room_id, client.user.user_id, "control_video_player");
+                
+
         let online_room = ONLINE_ROOMS.get(room._id);
         if(online_room == undefined){
             let admin = await (await db_client).default.getRoomAdmin(room_id);
@@ -59,8 +62,7 @@ function createWebSocketServer(server){
         client.on("video_player", async (payload) => {
             let { action } = payload;
             if(action != "sync"){
-                let member_has_access = await (await db_client).default.doMemberHasAccess(room_id, client.user.user_id, "control_video_player");
-                if(member_has_access)
+                if(client.member_has_access)
                     online_room.broadcast(client, "video_player", payload);
             }else{
                 online_room.send_to_admin("video_player", payload);
