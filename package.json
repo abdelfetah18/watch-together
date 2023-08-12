@@ -25,6 +25,7 @@
     "react-icons": "^4.8.0",
     "ws": "^8.13.0",
     "youtube-search-without-api-key": "^1.1.0",
+    "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {

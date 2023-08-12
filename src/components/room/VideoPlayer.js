@@ -12,6 +12,9 @@ export default function VideoPlayer({ user, room, ws }){
     const [videos,setVideos] = useState([]);
     const [currentVideo,setCurrentVideo] = useState(null);
     const [search,setSearch] = useState("");
+    
+    // NOTE: This message is to indicate that the official youtube API has exceed its limit.
+    const [alertMessage, setAlertMessage] = useState("");
 
     useEffect(() => {
         console.log({ws})
@@ -41,6 +44,9 @@ export default function VideoPlayer({ user, room, ws }){
             axios.get("/api/room/youtube_search?q="+search,{ headers:{ authorization: user.access_token } }).then(res => {
                 if(res.data.status == "success"){
                     setVideos(res.data.videos);
+                    if(!res.data.is_official_api){
+                        setAlertMessage("Some videos may not work because the official API has exceed its limit.");
+                    }
                 }
             }).catch(err => {
                 console.log(err);
@@ -62,21 +68,22 @@ export default function VideoPlayer({ user, room, ws }){
             </div>
 
             <div className="w-full flex-grow flex flex-col items-center overflow-auto my-4">
+                
+                {
+                    alertMessage && <div className="w-11/12 bg-sky-950 px-8 py-2 rounded-md font-semibold text-red-500">{alertMessage}</div>
+                }
+
                 <div className="w-11/12 flex flex-row flex-wrap my-2">
                     {
                         videos.map((v,index) => {
-                            function selectVideo(){
-                                setCurrentVideo('https://www.youtube.com/watch?v='+v.id.videoId);
+                            function selectVideo(videoId){
+                                setCurrentVideo('https://www.youtube.com/watch?v='+videoId);
                                 setSearch("");
                                 setVideos([]);
+                                setAlertMessage("");
                             }
-
-                            return (
-                            <div key={index} onClick={selectVideo} className="w-1/5 my-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 p-2 rounded-lg">
-                                <img alt="profile_image" className="w-full" src={v.snippet.thumbnails.high.url} />
-                                <div className="text-white text-sm font-bold py-2 text-ellipsis">{v.snippet.title}</div>
-                            </div>
-                            )
+                            
+                            return <VideoCardHandler key={index} selectVideo={selectVideo} video={v} />
                         })
                     }
                 </div>
@@ -87,4 +94,27 @@ export default function VideoPlayer({ user, room, ws }){
             </div>
         </div>
     )
+}
+
+const VideoCardHandler = ({ video, selectVideo }) => {
+    if(video.is_official_api){
+        return <VideoCard videoId={video.id.videoId} title={video.snippet.title} thumbnail={video.snippet.thumbnails.high.url} selectVideo={selectVideo} />
+    }else{
+        return <VideoCard videoId={video.videoId} title={video.title} thumbnail={video.thumbnail} selectVideo={selectVideo} />
+    }
+}
+
+const VideoCard = ({ selectVideo, videoId, thumbnail, title }) => {
+    
+    function onClick(){
+        selectVideo(videoId);
+    }
+
+    return (
+        <div onClick={onClick} className="w-1/4 my-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 p-2 rounded-lg">
+            <img alt="profile_image" className="w-full rounded-md" src={thumbnail} />
+            <div className="text-gray-300 text-sm font-medium py-2 text-start">{title}</div>
+        </div>
+    )
+
 }
