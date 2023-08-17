@@ -29,7 +29,7 @@ export default function Profile({ user, rooms }){
             <div className="w-5/6 h-full flex flex-col items-center py-4">
                 <div className="w-11/12 h-full flex flex-col">
                     <div className="w-full text-lg font-semibold text-white">MY ROOMS</div>
-                    <div className="w-full flex flex-row flex-wrap my-4">
+                    <div className="w-full flex flex-row flex-wrap my-4 overflow-auto">
                         {
                             rooms.map((room, index) => {
                                 return(
