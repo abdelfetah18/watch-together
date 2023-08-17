@@ -1,7 +1,7 @@
 const { verifyToken } = require("../utils/encryption");
 
 module.exports = async ( req, res, next) => {
-    let protected_paths = ['/profile','/explore','/settings','/room/create','/api/explore'];
+    let protected_paths = ['/profile','/explore','/settings','/search','/room/create','/api/explore','/api/search'];
     if(!protected_paths.includes(req.path)){
         next();
         return;

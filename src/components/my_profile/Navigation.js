@@ -1,10 +1,15 @@
-import { FaCog, FaCompass, FaPlus, FaSignOutAlt, FaUsers } from "react-icons/fa";
+import { FaCog, FaCompass, FaPlus, FaSearch, FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const navigations = [
     {
         label: "CREATE ROOM",
         path: "/room/create",
         Icon: FaPlus
+    },
+    {
+        label: "SEARCH",
+        path: "/search",
+        Icon: FaSearch
     },
     {
         label: "MY ROOMS",

@@ -157,6 +157,11 @@ class Client {
         return messages[0];
       return null;
     }
+
+    async searchForRoom(query){
+      let rooms = await this.sanity_client.fetch('*[_type=="room" && privacy=="public" && name match $query]'+room_props,{ query: "*"+query+"*" });
+      return rooms;
+    }
 }
   
 /*
