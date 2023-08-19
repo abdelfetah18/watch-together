@@ -19,8 +19,8 @@ export default async function handler(req, res) {
                     hash += "." + salt;
                     let new_user = await client.createUser({ _type:"user", username, email, password: hash });
                     const token_data = { type:"setup", data:{ user_id: new_user._id } };
-                    let access_token = generateToken(token_data);
-                    res.status(200).json({ status:"success", message:"sign_up successfuly!", data:{ token:access_token } });
+                    let access_token = await generateToken(token_data);
+                    res.status(200).json({ status:"success", message:"sign_up successfuly!", data:{ token: access_token } });
                 }
             }
         } catch(err){
