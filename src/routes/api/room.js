@@ -10,8 +10,11 @@ module.exports = async ( req, res, next) => {
     try {
         let is_valid = await verifyToken(access_token);
         req.user = is_valid.payload;
-        next();
+        if(is_valid){
+            next();
+        }
     }catch(err){
-        res.redirect("/user/sign_in");
+        console.log(err);
+        res.status(200).json({ status: "error", message: "Something went wrong.", error: err });
     }
 }
