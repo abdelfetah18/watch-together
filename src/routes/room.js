@@ -3,7 +3,7 @@ const { verifyToken } = require("../utils/encryption");
 module.exports = async ( req, res, next) => {
     let access_token = req.headers.authorization || req.cookies.access_token;
     if(!access_token){
-        res.redirect("/user/sign_in");
+        res.status(200).json({ status: "error", message: "Something went wrong", error: err });
         return;
     }
     
@@ -12,6 +12,8 @@ module.exports = async ( req, res, next) => {
         req.user = is_valid.payload;
         next();
     }catch(err){
-        res.redirect("/user/sign_in");
+        console.log(err);
+        res.status(200).json({ status: "error", message: "Something went wrong", error: err });
+        // res.redirect("/user/sign_in");
     }
 }
