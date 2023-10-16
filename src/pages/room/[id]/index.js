@@ -13,8 +13,6 @@ export async function getServerSideProps({ req, query }){
         var { id:room_id } = query;
         var user = req.user.data;
         var room = await client.getRoomIfIn(room_id, user.user_id);
-        // FIXME: This query seem to be intresting.
-        // messages_qeury => getData('*[_type=="room" && _id == $room_id && ($user_id in members[]->user->_id)]{ _id,"profile_image":profile_image.asset->url,admin->{ _id,username,"profile_image":@.profile_image.asset->url }, creator->{ _id,username,"profile_image":@.profile_image.asset->url }, name,"members_count":count(members) }[0]',{ room_id,user_id:user_info.user_id });
         var _user = await client.getUser(user.user_id);
         var payload = { type:"invite", data:{ room_id }};
         var invite_token = await generateToken(payload);

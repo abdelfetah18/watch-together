@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import YoutubePlayer from "./YoutubePlayer";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
+import Loading from "../Loading";
 
 const FREE_API_ALERT_MESSAGE =  "I am using the youtube free search API\n"+
                                 "and it has a limited requests. so instead\n"+
@@ -12,6 +13,7 @@ export default function VideoPlayer({ user, room, ws }){
     const [videos,setVideos] = useState([]);
     const [currentVideo,setCurrentVideo] = useState(null);
     const [search,setSearch] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     
     // NOTE: This message is to indicate that the official youtube API has exceed its limit.
     const [alertMessage, setAlertMessage] = useState("");
@@ -36,9 +38,13 @@ export default function VideoPlayer({ user, room, ws }){
 
     function searchYoutube(){
         if(search.length > 0){
+            setVideos([]);
+            setAlertMessage("");
+            setIsLoading(true);
             if(isYoutubeUrl()){
                 setCurrentVideo(search);
                 setSearch("");
+                setIsLoading(false);
                 return;
             }
             axios.get("/api/room/youtube_search?q="+search,{ headers:{ authorization: user.access_token } }).then(res => {
@@ -47,6 +53,7 @@ export default function VideoPlayer({ user, room, ws }){
                     if(!res.data.is_official_api){
                         setAlertMessage("Some videos may not work because the official API has exceed its limit.");
                     }
+                    setIsLoading(false);
                 }
             }).catch(err => {
                 console.log(err);
@@ -68,6 +75,9 @@ export default function VideoPlayer({ user, room, ws }){
             </div>
 
             <div className="w-full flex-grow flex flex-col items-center overflow-auto my-4">
+                {
+                    isLoading && <Loading />
+                }
                 
                 {
                     alertMessage && <div className="w-11/12 bg-sky-950 px-8 py-2 rounded-md font-semibold text-red-500">{alertMessage}</div>
