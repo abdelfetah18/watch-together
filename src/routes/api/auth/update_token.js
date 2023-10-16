@@ -14,8 +14,12 @@ module.exports = async ( req, res) => {
             res.status(200).json({ status: "success", data: { token: access_token }});
         }
     }catch(err){
-        if(err.code == "ERR_JWS_SIGNATURE_VERIFICATION_FAILED"){
-            let token = await generateToken(is_valid.payload);
+        // FIXME: Find a better way to extract the payload for the new token
+        //        Like passing user_id in the request body.
+        let payload = JSON.parse(Buffer.from(access_token.split(".")[1], 'base64').toString());
+        console.log({ payload });
+        if(err.code == "ERR_JWT_EXPIRED"){
+            let token = await generateToken(payload);
             res.status(200).json({ status: "success", data: { token }});
         }
         res.status(200).json({ status: "error", message: "Something went wrong", err });
