@@ -16,7 +16,7 @@ export default function Home() {
         <Features />
         <SupportedList />
         <FAQ />
-        <a  href="/user/sign_up" className="font-mono font-bold px-16 py-2 rounded-lg bg-sky-600 w-fit text-white my-8 cursor-pointer">Create Account</a>
+        <a  href="/user/sign_up" className="font-mono font-bold px-16 py-2 rounded-lg bg-sky-600 w-fit text-white my-8 cursor-pointer uppercase">Create Account</a>
       </div>
       <Footer />
     </div>

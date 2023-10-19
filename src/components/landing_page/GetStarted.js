@@ -7,10 +7,10 @@ export default function GetStarted(){
         <div className="w-full px-20 flex flex-row items-center flex-grow flex-wrap bg-black/40">
             <div className="flex flex-col w-2/3">
                 <div className="w-5/6  flex flex-col">
-                    <div className="text-4xl font-mono font-extrabold text-gray-50">{headline}</div>
-                    <div className="text-lg font-semibold font-mono text-gray-100 py-4">{sub_heading}</div>
-                    <div className="w-4/5 text-base font-thin font-mono text-gray-200 pt-4 pb-8">{description}</div>
-                    <a href="/user/sign_up" className="my-8 px-8 py-2 bg-blue-600 rounded-lg font-mono text-white w-fit cursor-pointer hover:bg-blue-700 duration-300">Get Started</a>
+                    <div className="w-4/5 text-4xl font-mono font-extrabold text-gray-50">{headline}</div>
+                    <div className="w-3/5 text-lg font-medium font-mono text-gray-100 pt-8 uppercase">{sub_heading}</div>
+                    {/* <div className="w-4/5 text-base font-thin font-mono text-gray-200 pt-4 pb-8">{description}</div> */}
+                    <a href="/user/sign_up" className="uppercase font-semibold my-8 px-8 py-2 bg-blue-600 rounded-lg font-mono text-white w-fit cursor-pointer hover:bg-blue-700 duration-300">Get Started</a>
                 </div>
             </div>
         </div>
