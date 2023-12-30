@@ -1,39 +1,46 @@
 export default {
-    name:"room",
-    title:"room",
-    type:"document",
-    fields:[
+    name: "room",
+    title: "room",
+    type: "document",
+    fields: [
         {
-            name:"profile_image",
-            title:"profile_image",
-            type:"image"
+            name: "profile_image",
+            title: "profile_image",
+            type: "image"
         },
         {
-            name:"name",
-            title:"name",
-            type:"string"
+            name: "name",
+            title: "name",
+            type: "string"
         },
         {
-            name:"description",
-            title:"description",
-            type:"string"
+            name: "bio",
+            title: "bio",
+            type: "string"
         },
         {
-            name:"creator",
-            title:"creator",
-            type:"reference",
-            to:{ type:"user" }
+            name: "categories",
+            title: "categories",
+            type: "array",
+            of: [{ type: "reference", to: { type: "room_category" } }]
         },
         {
-            name:"admin",
-            title:"admin",
-            type:"reference",
-            to:{ type:"user" }
+            name: "creator",
+            title: "creator",
+            type: "reference",
+            to: { type: "user" }
+        },
+
+        {
+            name: "admin",
+            title: "admin",
+            type: "reference",
+            to: { type: "user" }
         },
         {
-            name:"privacy",
-            title:"privacy",
-            type:"string",
+            name: "privacy",
+            title: "privacy",
+            type: "string",
             options: {
                 list: [
                     { title: 'public', value: 'public' },
@@ -42,9 +49,9 @@ export default {
             }
         },
         {
-            name:"password",
-            title:"password",
-            type:"string"
+            name: "password",
+            title: "password",
+            type: "string"
         }
     ]
 }
