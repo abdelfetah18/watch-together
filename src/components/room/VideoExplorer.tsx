@@ -86,20 +86,20 @@ export default function VideoExplorer() {
     }
 
     return (
-        <div className="w-3/4 h-full flex flex-col items-center dark:bg-gray-900 bg-indigo-50">
-            <div className="w-full flex flex-row items-center bg-indigo-300 dark:bg-gray-900 shadow-xl py-4">
+        <div className="w-3/4 h-full flex flex-col items-center dark:bg-dark-gray bg-light-gray overflow-auto">
+            <div className="w-full flex flex-row items-center py-4">
                 <a href={"/profile"}>
                     <div className="ml-4 text-white font-bold text-xl cursor-pointer"><img className="h-12" src="/logo.png" /></div>
                 </a>
-                <div className="mx-4 flex-grow bg-indigo-200 dark:bg-gray-100 rounded-lg flex flex-row items-center flex-wrap cursor-pointer text-indigo-500">
-                    <FaSearch className="text-base w-1/12 dark:text-gray-400 text-indigo-400" />
-                    <input onKeyDown={(evt) => { if (evt.code === "Enter") { searchYoutube(); } }} value={search} onChange={(evt) => setSearch(evt.target.value)} className="text-base font-medium bg-transparent flex-grow h-full rounded-lg px-4 py-2 focus-visible:outline-none placeholder:text-indigo-400 dark:placeholder:text-gray-400" type="text" placeholder="Search or Paste a YOUTUBE URL and hit Enter" />
+                <div className="mx-4 flex-grow border dark:border-none dark:bg-dark-gray-bg rounded-full flex flex-row items-center flex-wrap cursor-pointer text-gray-900">
+                    <div className="text-gray-300 px-4"><FaSearch /></div>
+                    <input onKeyDown={(evt) => { if (evt.code === "Enter") { searchYoutube(); } }} value={search} onChange={(evt) => setSearch(evt.target.value)} className="bg-transparent flex-grow h-full py-3 focus-visible:outline-none placeholder:text-gray-400 dark:placeholder:text-gray-400 dark:text-gray-50" type="text" placeholder="Search or Paste a YOUTUBE URL and hit Enter" />
                 </div>
             </div>
 
-            <div className="w-full flex-grow flex flex-col items-center overflow-auto py-8">
+            <div className="w-full flex-grow flex flex-col items-center py-4">
                 {
-                    alertMessage && <div className="w-11/12 flex items-center dark:bg-sky-950 bg-indigo-200 px-8 py-2 rounded-md font-semibold text-red-500"><FaExclamationTriangle className="mr-2" />{alertMessage}</div>
+                    alertMessage && <div className="w-11/12 flex items-center dark:bg-dark-gray-bg border dark:border-none px-8 py-4 rounded-md text-orange-600 mb-6"><FaExclamationTriangle className="mr-2" />{alertMessage}</div>
                 }
 
                 <div className="w-11/12 flex flex-row flex-wrap my-2">
@@ -131,9 +131,9 @@ export default function VideoExplorer() {
 
 const VideoCardHandler = ({ video, selectVideo }) => {
     if (video.is_official_api) {
-        return <VideoCard videoId={video.id.videoId} title={video.snippet.title} thumbnail={video.snippet.thumbnails.high.url} selectVideo={selectVideo} />
+        return <VideoCard videoId={video.id.videoId} title={video.snippet.title} thumbnail={video.snippet.thumbnails.high.url} selectVideo={selectVideo} channelName="" posted_at="" timestamp="" views={0} />
     } else {
-        return <VideoCard videoId={video.videoId} title={video.title} thumbnail={video.thumbnail} selectVideo={selectVideo} />
+        return <VideoCard videoId={video.videoId} title={video.title} thumbnail={video.thumbnail} selectVideo={selectVideo} channelName={video.author.name} posted_at={video.ago} views={video.views} timestamp={video.duration.timestamp} />
     }
 }
 

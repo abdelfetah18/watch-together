@@ -7,11 +7,11 @@ export default function Explore() {
     const { rooms, joinRoom } = useExploreRooms();
 
     return (
-        <div className="w-full h-screen dark:bg-gray-900 flex flex-row">
-            <Navigation selected_label={"EXPLORE"} />
-            <div className="w-5/6 h-full flex flex-col items-center py-4">
-                <div className="w-11/12 flex-grow overflow-auto flex flex-col">
-                    <div className="w-full text-lg font-semibold text-indigo-700 dark:text-indigo-50">EXPLORE</div>
+        <div className="w-full h-screen dark:bg-dark-gray flex flex-row">
+            <Navigation selected_label={"Explore"} />
+            <div className="w-5/6 h-full flex flex-col items-center py-4 overflow-auto">
+                <div className="w-11/12 flex-grow flex flex-col">
+                    <div className="w-full text-xl py-4 font-medium text-gray-900 dark:text-gray-50">Explore</div>
                     <div className="w-full flex flex-row flex-wrap my-4">
                         {
                             rooms.map((room, index) => {

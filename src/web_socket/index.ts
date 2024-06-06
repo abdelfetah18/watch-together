@@ -17,13 +17,13 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
         let access_token: string = url.searchParams.get("access_token");
 
         if (!access_token) {
-            client.close(client.CLOSED, "No access_token.");
+            client.close(client.CLOSING, "No access_token.");
             return;
         }
 
         let token_payload: JWTToken<AuthToken> = verifyToken(access_token);
         if (!token_payload) {
-            client.close(client.CLOSED, "Bad access_token.");
+            client.close(client.CLOSING, "Bad access_token.");
             return;
         }
 
@@ -32,7 +32,7 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
 
         let room: Room = await db_client.getRoomIfIn(room_id, user._id);
         if (!room) {
-            client.close(client.CLOSED, 'Room does not exist.');
+            client.close(client.CLOSING, 'Room does not exist.');
             return;
         }
 

@@ -1,7 +1,7 @@
 import '@/styles/globals.css';
 import UserSessionContext from '@/contexts/UserSessionContext';
 import { useEffect } from 'react';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import ThemeContext from '@/contexts/ThemeContext';
 import useTheme from '@/hooks/useTheme';
 import useUserSession from '@/hooks/useUserSession';
@@ -12,7 +12,7 @@ import LoadingContext from '@/contexts/LoadingContext';
 import useLoading from '@/hooks/useLoading';
 import Loading from '@/components/Loading';
 
-const inter = Inter({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
+const inter = Roboto({ subsets: ['latin'], weight: ['100', '300', '400', '500', '700', '900'] });
 
 // export function reportWebVitals(metric) {
 //   console.log(metric);

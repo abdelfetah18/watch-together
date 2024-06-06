@@ -1,6 +1,6 @@
 import ThemeContext from "@/contexts/ThemeContext";
 import { useContext } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSignInAlt, FaSun } from "react-icons/fa";
 
 export default function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -25,13 +25,16 @@ export default function Header() {
                     {theme == 'dark' && <FaSun />}
                 </div>
                 <div onClick={scrollTo(1)} className={styles.navItem}>Features</div>
-                <div onClick={scrollTo(2)} className={styles.navItem}>FAQ</div>
-                <a href="/user/sign_in" className={styles.navItem}>SIGN IN</a>
+                {/* <div onClick={scrollTo(2)} className={styles.navItem}>FAQ</div> */}
+                <a href="/user/sign_in" className="flex items-center m-8 text-gray-900 dark:text-gray-50 hover:text-indigo-600 dark:hover:text-indigo-600 active:scale-110 duration-300">
+                    <FaSignInAlt />
+                    <div className="text-sm font-semibold ml-2">Sign In</div>
+                </a>
             </div>
         </div>
     )
 }
 
 const styles = {
-    navItem: 'dark:text-gray-100 text-indigo-700 font-semibold text-sm ml-8 cursor-pointer hover:text-blue-600 hover:font-semibold duration-300 uppercase',
+    navItem: 'dark:text-gray-100 text-gray-900 text-sm font-semibold ml-8 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-600 hover:font-semibold duration-300 active:scale-110',
 };
