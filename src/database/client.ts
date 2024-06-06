@@ -12,8 +12,8 @@ const client: SanityClient = createClient({
 
 const USER_PROPS = '{ _id,username,"profile_image":profile_image.asset-> }';
 const USER_PASSWORD_PROPS = '{ _id, username, password, "profile_image": profile_image.asset->url }';
-const ROOM_PROPS = '{ _id,"profile_image": profile_image.asset->,categories[]->,admin->, creator->, name, privacy, password, description, bio, "total_members": count(*[_type=="member" && @.room._ref==^._id]) }';
-const MESSAGE_PROPS = '{"user":user->{ _id,username,"profile_image":@.profile_image.asset-> },message,type,_createdAt } | order(@._createdAt asc)';
+const ROOM_PROPS = `{ _id,"profile_image": profile_image.asset->,categories[]->,admin->${USER_PROPS}, creator->${USER_PROPS}, name, privacy, password, description, bio, "total_members": count(*[_type=="member" && @.room._ref==^._id]) }`;
+const MESSAGE_PROPS = `{"user":user->${USER_PROPS},message,type,_createdAt } | order(@._createdAt asc)`;
 const MEMBER_PROPS = `{_id, user->${USER_PROPS}, room->${ROOM_PROPS}, permissions }`;
 const ROOM_CATEGORY_PROPS = '{ _id, name }';
 
