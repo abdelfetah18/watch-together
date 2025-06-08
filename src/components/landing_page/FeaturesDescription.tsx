@@ -7,18 +7,18 @@ interface Feature {
 
 export default function FeaturesDescription() {
     return (
-        <div className="w-full flex flex-col items-center justify-center my-20">
-            <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col items-center justify-center">
+            <div className="w-full grid grid-cols-2 gap-16">
                 {
                     features.map((feature, index) => {
                         return (
-                            <div key={index} className="w-full flex items-center mb-10 last:mb-0" style={{ direction: feature.image_side == 'left' ? 'rtl' : 'ltr' }}>
-                                <div className="aspect-video w-1/2 flex items-center justify-center rounded-lg">
-                                    <img src={`/images/landing_page/${feature.image_name}`} className="rounded-lg" />
+                            <div key={index} className="w-full flex flex-col gap-4">
+                                <div className="w-full aspect-video flex items-center justify-center border dark:border-none rounded-3xl">
+                                    <img src={`/images/landing_page/${feature.image_name}`} className="h-full rounded-3xl object-cover" />
                                 </div>
-                                <div className="w-1/2 px-4 flex flex-col text-left items-baseline">
-                                    <div className="w-full mb-2 text-2xl font-bold text-gray-900 dark:text-gray-100">{feature.title}</div>
-                                    <div className="w-2/3 text-gray-800 dark:text-gray-200">{feature.description}</div>
+                                <div className="w-full flex flex-col items-center gap-2">
+                                    <div className="text-center text-2xl font-bold text-black dark:text-white">{feature.title}</div>
+                                    <div className="text-center text-black dark:text-white">{feature.description}</div>
                                 </div>
                             </div>
                         )

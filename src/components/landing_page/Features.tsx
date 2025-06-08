@@ -10,18 +10,18 @@ interface Feature {
 
 export default function Features() {
     return (
-        <div className="w-full flex flex-col items-center justify-center mb-20">
-            <div className="text-3xl font-semibold text-gray-900 dark:text-gray-50 mb-16">Why Choose Watch Together?</div>
-            <div className="w-full flex">
+        <div className="w-full flex flex-col items-center justify-center gap-12">
+            <div className="text-4xl font-semibold text-gray-900 dark:text-gray-50">Why Choose Watch Together?</div>
+            <div className="w-full grid grid-cols-4 gap-8">
                 {
                     features.map((feature, index) => {
                         return (
-                            <div key={index} className="w-1/4 flex flex-col items-center">
-                                <div className="w-11/12 flex flex-col items-center">
-                                    <div className="text-3xl text-indigo-700 dark:text-gray-100"><feature.Icon /></div>
-                                    <div className="text-center mt-2 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">{feature.name}</div>
-                                    <div className="w-3/4 text-center text-sm text-gray-800 dark:text-gray-200">{feature.description}</div>
+                            <div key={index} className="w-full flex flex-col items-center gap-2">
+                                <div className="w-full flex flex-col items-center gap-4">
+                                    <div className="text-5xl text-indigo-700 dark:text-gray-100"><feature.Icon /></div>
+                                    <div className="text-center text-lg font-semibold text-gray-900 dark:text-gray-100">{feature.name}</div>
                                 </div>
+                                <div className="w-full text-center text-gray-800 dark:text-gray-200">{feature.description}</div>
                             </div>
                         )
                     })

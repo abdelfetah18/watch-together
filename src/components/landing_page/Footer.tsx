@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <div className="flex flex-col w-full rounded-t-lg items-center mt-20">
+        <div className="flex flex-col w-full rounded-t-lg items-center">
             <div className="flex flex-row items-center my-2">
                 <div className="flex flex-row items-center text-gray-900 dark:text-indigo-50 text-sm">
                     <div className="font-semibold text-xs">© 2024 Coded and Designed By </div>
