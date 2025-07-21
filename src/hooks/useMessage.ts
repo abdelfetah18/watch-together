@@ -5,7 +5,6 @@ const initMessage: Message = {
     message: '',
     _createdAt: '',
     type: 'text',
-    user: { username: '', profile_image: null },
     room: { bio: '', categories: [], name: '', privacy: 'private', profile_image: null, total_members: 0 }
 };
 

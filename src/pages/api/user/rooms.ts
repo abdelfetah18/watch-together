@@ -1,9 +1,7 @@
-import client from "@/database/client";
+import { roomRepository } from "@/repositories";
 
 export default async function handler(req, res) {
-    let userSession: UserSession = req.userSession;
-    let rooms = await client.getAlreadyInRooms(userSession.user_id);
-
-    res.status(200).json({ status:"success", data: rooms });
+    const userSession: UserSession = req.userSession;
+    const rooms = await roomRepository.getRoomsUserIsMemberOf(userSession.user_id);
+    res.status(200).json({ status: "success", data: rooms });
 }
-  

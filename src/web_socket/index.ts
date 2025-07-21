@@ -2,8 +2,8 @@ import { Server as HttpServer } from 'http';
 import { Server as WSServer } from 'ws';
 import { verifyToken } from '../utils/encryption';
 import WSRoom from './WSRoom';
-import db_client from '../database/client';
 import ClientSocket from './ClientSocket';
+import { messagesRepository, roomRepository, userRepository } from '@/repositories';
 
 export default function createWebSocketServer(server: HttpServer): WSServer {
     let ws: WSServer = process.env.NODE_ENV == "production" ? new WSServer({ server }, () => console.log('websocket server alive!')) : new WSServer({ port: 4000 }, () => console.log('websocket server alive on port:', 4000));
@@ -27,16 +27,16 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
             return;
         }
 
-        let user: User = await db_client.getUser(token_payload.data.user_id);
+        const user: User = await userRepository.getUserById(token_payload.data.user_id);
         client.userSession = { access_token, user, user_id: user._id, username: user.username };
 
-        let room: Room = await db_client.getRoomIfIn(room_id, user._id);
+        let room: Room = await roomRepository.getRoomById(room_id);
         if (!room) {
             client.close(client.CLOSING, 'Room does not exist.');
             return;
         }
 
-        // client.member_has_access = await db_client.doMemberHasAccess(room_id, client.user.user_id, "control_video_player");
+        // FIXME: Check if user is a member of that room
 
         let online_room: WSRoom = ONLINE_ROOMS.get(room._id);
         if (online_room == undefined) {
@@ -56,9 +56,20 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
 
         client.on("chat", async (payload: ChatEventPayload) => {
             let { message, type } = payload;
-            let msg_doc = { _type: "messages", room: { _type: "reference", _ref: room_id }, user: { _type: "reference", _ref: client.userSession.user_id }, message, type };
-            let message_ = await db_client.createMessage(msg_doc);
-            let msg = await db_client.getMessageById(message_._id);
+            let message_ = await messagesRepository.createMessage({
+                room: {
+                    _type: "reference",
+                    _ref: room_id
+                },
+                user: {
+                    _type: "reference",
+                    _ref: client.userSession.user_id
+                },
+                message,
+                type
+            });
+
+            let msg = await messagesRepository.getMessageById(message_._id);
             online_room.broadcast(client, "chat", msg);
         });
 

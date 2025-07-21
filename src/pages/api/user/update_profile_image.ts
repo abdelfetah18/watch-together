@@ -1,5 +1,5 @@
 import { Formidable } from "formidable";
-import client from "@/database/client";
+import { userRepository } from "@/repositories";
 
 export const config = {
     api: {
@@ -20,7 +20,7 @@ export default function handler(req, res): void {
             } else {
                 let userSession: UserSession = req.userSession;
                 // @ts-ignore
-                let asset = await client.uploadProfile(files["profile_image"].filepath, userSession.user_id);
+                const asset = await userRepository.uploadProfileImage(userSession.user_id, files["profile_image"].filepath);
 
                 res.status(200).json({
                     status: "success",

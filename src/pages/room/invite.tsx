@@ -1,39 +1,48 @@
 import { useEffect } from "react";
 import { verifyToken } from "@/utils/encryption";
-import client from "@/database/client";
+import { roomMemberRepository, roomRepository } from "@/repositories";
 
 export async function getServerSideProps({ req, query }) {
     const token = query.token;
-    let isValid: JWTToken<RoomInviteToken> = verifyToken(token);
-    if (isValid && isValid.type === "room_invite") {
-        let room_id = isValid.data.room_id;
-        let userSession: UserSession = req.userSession;
-        let room = await client.getRoomIfIn(room_id, userSession.user_id);
+    const isValid: JWTToken<RoomInviteToken> = verifyToken(token);
 
-        if (!room) {
-            let member_doc = { _type: "member", user: { _type: "reference", _ref: userSession.user_id }, room: { _type: "reference", _ref: room_id }, permissions: ["control_video_player", "remove_members", "edit_room_info"] };
-            await client.createMember(member_doc);
-
-            return {
-                redirect: {
-                    destination: '/room/' + room_id,
-                    permanent: false
-                }
-            }
-        } else {
-            return {
-                props: { status: "error", message: "Room not found or you already in." }
-            }
-        }
-    } else {
+    if (!isValid) {
         return {
             redirect: {
                 destination: '/profile',
                 permanent: false
             }
+        };
+    }
+
+    const roomId = isValid.data.room_id;
+    const userSession: UserSession = req.userSession;
+    const room = await roomRepository.getRoomById(roomId);
+
+    if (room && (room.admin as User)._id == userSession.user_id) {
+        return {
+            props: { status: "error", message: "Room not found or you already in." }
         }
     }
 
+    await roomMemberRepository.createMember({
+        user: {
+            _type: "reference",
+            _ref: userSession.user_id
+        },
+        room: {
+            _type: "reference",
+            _ref: roomId
+        },
+        permissions: ["control_video_player", "remove_members", "edit_room_info"],
+    });
+
+    return {
+        redirect: {
+            destination: '/room/' + roomId,
+            permanent: false
+        }
+    }
 }
 
 

@@ -1,18 +1,23 @@
-import client from "@/database/client";
+import { roomRepository } from "@/repositories";
 
 export default async function handler(req, res) {
     if (req.method == "POST") {
         let userSession: UserSession = req.userSession;
         let room: Room = req.body;
-        let room_: Room = await client.getRoomIfAdmin(room._id, userSession.user_id);
-        if (room_) {
+        let room_: Room = await roomRepository.getRoomById(room._id);
+        if (room_ && (room_.admin as User)._id == userSession.user_id) {
             let categories = [];
             for (let c of room.categories) {
                 categories.push({ _type: "reference", _ref: c._id });
             }
 
-            let new_doc = { name: room.name, privacy: room.privacy, password: room.privacy == 'private' ? room.password : '', categories };
-            let result = await client.updateRoom(room._id, new_doc);
+            let result = await roomRepository.updateRoomById(room._id, {
+                name: room.name,
+                privacy: room.privacy,
+                password: room.privacy == 'private' ? room.password : '',
+                categories,
+            });
+
             res.status(200).json({
                 status: "success",
                 message: "room data edited successfully!",

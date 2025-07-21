@@ -1,9 +1,9 @@
-import client from "@/database/client";
+import { userRepository } from "@/repositories";
 
 export default async function handler(req, res) {
-    let userSession: UserSession = req.userSession;
+    const userSession: UserSession = req.userSession;
 
-    let user = await client.getUser(userSession.user_id);
+    const user = await userRepository.getUserById(userSession.user_id);
     if (user) {
         res.status(200).json({ status: "success", data: user });
     } else {
