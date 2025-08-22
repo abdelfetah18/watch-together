@@ -1,4 +1,4 @@
-import { roomMemberRepository, roomRepository } from "@/repositories";
+import { roomMemberRepository, roomRepository, videoPlayerRepository } from "@/repositories";
 
 export default async function handler(req, res) {
     if (req.method != "POST") {
@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         });
     }
 
+    const videoPlayer = await videoPlayerRepository.createVideoPlayer();
     const createdRoom = await roomRepository.createRoom({
         name: room.name,
         bio: room.bio,
@@ -43,6 +44,10 @@ export default async function handler(req, res) {
         privacy: room.privacy,
         password: room.privacy == 'private' ? room.password : '',
         categories,
+        video_player: {
+            _type: "reference",
+            _ref: videoPlayer._id,
+        },
     });
 
     await roomMemberRepository.createMember({

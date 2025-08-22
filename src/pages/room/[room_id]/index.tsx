@@ -26,7 +26,7 @@ export default function Room() {
                 {
                     !room.isLoading && (
                         <div className="flex flex-row w-screen h-screen items-center">
-                            <VideoExplorer />
+                            <VideoExplorer videoPlayer={room.room.video_player as VideoPlayer} />
                             <RoomInfo />
                         </div>
                     )

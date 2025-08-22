@@ -3,6 +3,7 @@ import { createReadStream } from 'fs';
 
 import Repository from "./Repository";
 import UserRepository from "./UserRepository";
+import VideoPlayerRepository from './VideoPlayerRepository';
 
 export default class RoomRepository extends Repository {
     static DEFAULT_PROPS = `{
@@ -11,6 +12,7 @@ export default class RoomRepository extends Repository {
         categories[]->,
         admin->${UserRepository.DEFAULT_PROPS},
         creator->${UserRepository.DEFAULT_PROPS},
+        video_player->${VideoPlayerRepository.DEFAULT_PROPS},
         name,
         privacy,
         password,

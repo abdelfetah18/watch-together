@@ -16,6 +16,7 @@ interface Room {
     admin?: User | RefDocument;
     creator?: User | RefDocument;
     categories: RoomCategory[];
+    video_player?: VideoPlayer | RefDocument;
 }
 
 interface CreateRoom {
@@ -26,6 +27,7 @@ interface CreateRoom {
     admin: RefDocument;
     creator: RefDocument;
     categories: RefDocument[];
+    video_player: RefDocument;
 }
 
 interface UpdateRoom {

@@ -17,15 +17,19 @@ const FREE_API_ALERT_MESSAGE = "I am using the youtube free search API\n" +
 //       to learng more about programming and cyber security.
 const randomSearchQueries = ["andreas kling", "liveoverflow", "fireship", "cs50", "Philipp Lackner", "Net Ninja", "Coding With Lewis", "Jacob Sorber"];
 
-export default function VideoExplorer() {
+interface VideoExplorerProps {
+    videoPlayer: VideoPlayer;
+}
+
+export default function VideoExplorer({ videoPlayer }: VideoExplorerProps) {
     const loadingManager = useContext(LoadingContext);
     const userSession = useContext(UserSessionContext);
     const youtube = useYoutube();
 
     const { room } = useContext(RoomContext);
-    const [search, setSearch] = useState(randomSearchQueries[Math.floor(Math.random() * (randomSearchQueries.length - 1))]);
+    const [search, setSearch] = useState(videoPlayer.video_id ? "" : randomSearchQueries[Math.floor(Math.random() * (randomSearchQueries.length - 1))]);
     const [videoUrl, setVideoUrl] = useState('');
-    const [videoId, setVideoId] = useState('');
+    const [videoId, setVideoId] = useState(videoPlayer.video_id);
 
     // NOTE: This message is to indicate that the official youtube API has exceed its limit.
     const [alertMessage, setAlertMessage] = useState("");
@@ -112,13 +116,6 @@ export default function VideoExplorer() {
                                 setVideoId(videoId);
                                 youtube.setVideos([]);
                                 loadingManager.hide();
-                                // youtube.getVideoUrl(`https://www.youtube.com/watch?v=${videoId}`).then(url => {
-                                //     loadingManager.hide();
-                                //     setVideoUrl(url);
-                                //     setSearch("");
-                                //     youtube.setVideos([]);
-                                //     setAlertMessage("");
-                                // });
                             }
 
                             return <VideoCardHandler key={index} selectVideo={selectVideo} video={v} />
