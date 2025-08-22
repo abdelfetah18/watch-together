@@ -1,0 +1,99 @@
+import WebSocketContext from "@/contexts/WebSocketContext";
+import { useContext, useEffect, useRef } from "react";
+
+interface YoutubeVideoPlayerProps {
+    videoId: string;
+    isAdmin: boolean;
+}
+
+export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPlayerProps) {
+    const youtubePlayerRef = useRef<YT.Player>(null);
+    const { ws } = useContext(WebSocketContext);
+
+    const handleVideoPlayerPayload = (payload: VideoPlayerEventPayload): void => {
+        if (!isAdmin) {
+            youtubePlayerRef.current.loadVideoById(payload.data.video_url);
+            handleAction(payload);
+        } else {
+            if (payload.action == "sync") {
+                let action: VideoPlayerAction = "pause";
+                if (youtubePlayerRef.current.getPlayerState() == YT.PlayerState.PLAYING) {
+                    action = "play";
+                }
+                ws.current.send<VideoPlayerEventPayload>("video_player", { action, data: { video_url: videoId, timestamp: youtubePlayerRef.current.getCurrentTime() } });
+            }
+        }
+    }
+
+    const handleAction = (payload: VideoPlayerEventPayload) => {
+        if (payload.action == "play") {
+            youtubePlayerRef.current.playVideo();
+            youtubePlayerRef.current.seekTo(payload.data.timestamp, true);
+        }
+
+        if (payload.action == "pause") {
+            youtubePlayerRef.current.pauseVideo();
+            youtubePlayerRef.current.seekTo(payload.data.timestamp, true);
+        }
+
+        if (payload.action == "start") {
+            youtubePlayerRef.current.playVideo();
+            youtubePlayerRef.current.seekTo(0, true);
+        }
+
+        if (payload.action == "update") {
+            youtubePlayerRef.current.seekTo(payload.data.timestamp, true);
+        }
+    }
+
+    const onPause = () => {
+        if (isAdmin) {
+            let payload: VideoPlayerEventPayload = { action: "pause", data: { video_url: videoId, timestamp: youtubePlayerRef.current.getCurrentTime() } };
+            ws.current.send("video_player", payload)
+        }
+    }
+
+    const onPlay = () => {
+        if (isAdmin) {
+            let payload: VideoPlayerEventPayload = { action: "play", data: { video_url: videoId, timestamp: youtubePlayerRef.current.getCurrentTime() } };
+            ws.current.send("video_player", payload)
+        }
+    }
+
+    useEffect(() => {
+        youtubePlayerRef.current = new YT.Player("player", {
+            videoId,
+            width: "100%",
+            events: {
+                onStateChange: (event) => {
+                    if (event.target.getPlayerState() == YT.PlayerState.PAUSED) { onPause(); }
+                    if (event.target.getPlayerState() == YT.PlayerState.PLAYING) { onPlay(); }
+                },
+                onReady: () => { youtubePlayerRef.current.playVideo(); },
+            },
+            playerVars: {
+                // controls: 0,
+                fs: 1,
+                rel: 0,
+                loop: 0,
+            },
+        });
+    }, []);
+
+    useEffect(() => {
+        ws.current.addEventListener("video_player", ({ detail }) => {
+            handleVideoPlayerPayload(detail);
+        });
+
+        // FIXME: Find a better way to handle this.
+        setTimeout(() => {
+            if (!isAdmin) {
+                ws.current.send<VideoPlayerEventPayload>("video_player", { action: "sync", data: { video_url: '', timestamp: 0 } });
+            }
+        }, 3000);
+    }, []);
+
+    return (
+        <div id="player" className="w-11/12 h-full"></div>
+    )
+}

@@ -25,6 +25,7 @@ export default function VideoExplorer() {
     const { room } = useContext(RoomContext);
     const [search, setSearch] = useState(randomSearchQueries[Math.floor(Math.random() * (randomSearchQueries.length - 1))]);
     const [videoUrl, setVideoUrl] = useState('');
+    const [videoId, setVideoId] = useState('');
 
     // NOTE: This message is to indicate that the official youtube API has exceed its limit.
     const [alertMessage, setAlertMessage] = useState("");
@@ -107,13 +108,17 @@ export default function VideoExplorer() {
                         youtube.videos.map((v, index) => {
                             function selectVideo(videoId: string) {
                                 loadingManager.show();
-                                youtube.getVideoUrl(`https://www.youtube.com/watch?v=${videoId}`).then(url => {
-                                    loadingManager.hide();
-                                    setVideoUrl(url);
-                                    setSearch("");
-                                    youtube.setVideos([]);
-                                    setAlertMessage("");
-                                });
+                                setSearch("");
+                                setVideoId(videoId);
+                                youtube.setVideos([]);
+                                loadingManager.hide();
+                                // youtube.getVideoUrl(`https://www.youtube.com/watch?v=${videoId}`).then(url => {
+                                //     loadingManager.hide();
+                                //     setVideoUrl(url);
+                                //     setSearch("");
+                                //     youtube.setVideos([]);
+                                //     setAlertMessage("");
+                                // });
                             }
 
                             return <VideoCardHandler key={index} selectVideo={selectVideo} video={v} />
@@ -122,7 +127,11 @@ export default function VideoExplorer() {
                 </div>
 
                 <div className={"w-full h-5/6 " + (search.length > 0 ? "hidden" : "")}>
-                    <VideoPlayer video_url={videoUrl} setVideoUrl={setVideoUrl} isAdmin={(room.admin as User)._id == userSession.user_id} />
+                    {
+                        videoId && (
+                            <VideoPlayer videoId={videoId} isAdmin={(room.admin as User)._id == userSession.user_id} />
+                        )
+                    }
                 </div>
             </div>
         </div>
