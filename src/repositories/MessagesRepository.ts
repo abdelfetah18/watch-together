@@ -2,7 +2,7 @@ import Repository from "./Repository";
 import UserRepository from "./UserRepository";
 
 export default class MessagesRepository extends Repository {
-    DEFAULT_PROPS = `{
+    static DEFAULT_PROPS = `{
         _id,    
         "user": user->${UserRepository.DEFAULT_PROPS},
         message,
@@ -19,7 +19,7 @@ export default class MessagesRepository extends Repository {
                     _type=="member" &&
                     room._ref==$roomId
                 ].user._ref)
-        ]${this.DEFAULT_PROPS}`, { roomId, userId });
+        ]${MessagesRepository.DEFAULT_PROPS}`, { roomId, userId });
     }
 
     async createMessage(createMessage: CreateMessage): Promise<Message> {
@@ -33,7 +33,7 @@ export default class MessagesRepository extends Repository {
         const messages = await this.sanityClient.fetch(`*[
             _type == "messages" &&
             _id == $id
-        ]${this.DEFAULT_PROPS}`, { id });
+        ]${MessagesRepository.DEFAULT_PROPS}`, { id });
 
         if (messages.length > 0) {
             return messages[0];

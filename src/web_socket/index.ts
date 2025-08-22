@@ -3,7 +3,7 @@ import { Server as WSServer } from 'ws';
 import { verifyToken } from '../utils/encryption';
 import WSRoom from './WSRoom';
 import ClientSocket from './ClientSocket';
-import { messagesRepository, roomRepository, userRepository } from '@/repositories';
+import { messagesRepository, roomRepository, userRepository } from '../repositories';
 
 export default function createWebSocketServer(server: HttpServer): WSServer {
     let ws: WSServer = process.env.NODE_ENV == "production" ? new WSServer({ server }, () => console.log('websocket server alive!')) : new WSServer({ port: 4000 }, () => console.log('websocket server alive on port:', 4000));

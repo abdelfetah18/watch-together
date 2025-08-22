@@ -4,13 +4,13 @@ import { createReadStream } from 'fs';
 import Repository from "./Repository";
 
 export default class UserRepository extends Repository {
-    DEFAULT_PROPS = `{ 
+    static DEFAULT_PROPS = `{ 
         _id,
         username,
         "profile_image": profile_image.asset->
     }`;
 
-    PASSWORD_PROPS = `{ 
+    static PASSWORD_PROPS = `{ 
         _id,
         username,
         password,
@@ -26,7 +26,7 @@ export default class UserRepository extends Repository {
         const users = await this.sanityClient.fetch<User[]>(`*[
             _type=="user" &&
             username == $username
-        ]${this.DEFAULT_PROPS}`, { username });
+        ]${UserRepository.DEFAULT_PROPS}`, { username });
 
         if (users.length > 0) {
             return users[0];
@@ -39,7 +39,7 @@ export default class UserRepository extends Repository {
         const users = await this.sanityClient.fetch<User[]>(`*[
             _type=="user" &&
             _id == $id
-        ]${this.DEFAULT_PROPS}`, { id });
+        ]${UserRepository.DEFAULT_PROPS}`, { id });
 
         if (users.length > 0) {
             return users[0];
@@ -51,8 +51,8 @@ export default class UserRepository extends Repository {
     async getUserWithPasswordByUsername(username: string): Promise<User> {
         const users = await this.sanityClient.fetch<User[]>(`*[
             _type=="user" &&
-            _id == $username
-        ]${this.PASSWORD_PROPS}`, { username });
+            username == $username
+        ]${UserRepository.PASSWORD_PROPS}`, { username });
 
         if (users.length > 0) {
             return users[0];

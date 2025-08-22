@@ -3,7 +3,7 @@ import RoomRepository from "./RoomRepository";
 import UserRepository from "./UserRepository";
 
 export default class RoomMemberRepository extends Repository {
-    DEFAULT_PROPS = `{
+    static DEFAULT_PROPS = `{
         _id,
         user->${UserRepository.DEFAULT_PROPS},
         room->${RoomRepository.DEFAULT_PROPS},
@@ -22,7 +22,7 @@ export default class RoomMemberRepository extends Repository {
             _type == "member" &&
             room._ref == $roomId &&
             user._ref == $memberId
-        ]${this.DEFAULT_PROPS}`, { roomId, memberId });
+        ]${RoomMemberRepository.DEFAULT_PROPS}`, { roomId, memberId });
 
         let deleted = null;
         if (member)
@@ -35,6 +35,14 @@ export default class RoomMemberRepository extends Repository {
         return await this.sanityClient.fetch(`*[
             _type=="member" &&
             room._ref == $roomId
-        ]${this.DEFAULT_PROPS}`, { roomId });
+        ]${RoomMemberRepository.DEFAULT_PROPS}`, { roomId });
+    }
+
+    async getRoomMembersByUserId(roomId: string, userId: string): Promise<Room[]> {
+        return await this.sanityClient.fetch(`*[
+            _type=="member" &&
+            room._ref == $roomId &&
+            user._ref == $userId
+        ]${RoomMemberRepository.DEFAULT_PROPS}`, { roomId, userId });
     }
 }

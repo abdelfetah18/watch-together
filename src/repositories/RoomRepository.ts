@@ -5,7 +5,7 @@ import Repository from "./Repository";
 import UserRepository from "./UserRepository";
 
 export default class RoomRepository extends Repository {
-    DEFAULT_PROPS = `{
+    static DEFAULT_PROPS = `{
         _id,
         "profile_image": profile_image.asset->,
         categories[]->,
@@ -37,7 +37,7 @@ export default class RoomRepository extends Repository {
             fetch<Room[]>(`*[
                 _type == "room" &&
                 (_id in *[_type == "member" && $userId == user._ref].room._ref)
-            ]${this.DEFAULT_PROPS}`, { userId });
+            ]${RoomRepository.DEFAULT_PROPS}`, { userId });
     }
 
     async getPublicRoomsUserIsNotMemberOf(userId: string): Promise<Room[]> {
@@ -46,14 +46,14 @@ export default class RoomRepository extends Repository {
                     _type=="room" &&
                     !(_id in *[_type=="member" && $userId == @.user._ref].room._ref) &&
                     privacy=="public"
-                ]${this.DEFAULT_PROPS}`, { userId });
+                ]${RoomRepository.DEFAULT_PROPS}`, { userId });
     }
 
     async getRoomById(id: string): Promise<Room> {
         const rooms = await this.sanityClient.fetch<Room[]>(`*[
             _type=="room" &&
             _id == $id
-        ]${this.DEFAULT_PROPS}`, { id });
+        ]${RoomRepository.DEFAULT_PROPS}`, { id });
 
         if (rooms.length > 0) {
             return rooms[0];
@@ -66,7 +66,7 @@ export default class RoomRepository extends Repository {
         const rooms = await this.sanityClient.fetch<Room[]>(`*[
             _type=="room" &&
             name == $name
-        ]${this.DEFAULT_PROPS}`, { name });
+        ]${RoomRepository.DEFAULT_PROPS}`, { name });
 
         if (rooms.length > 0) {
             return rooms[0];
@@ -76,7 +76,7 @@ export default class RoomRepository extends Repository {
     }
 
     async getRoomWhereUserIsAdmin(room_id: string, user_id: string): Promise<Room> {
-        let room = await this.sanityClient.fetch('*[_type=="room" && _id==$room_id && admin->_id==$user_id ]' + this.DEFAULT_PROPS, { room_id, user_id });
+        let room = await this.sanityClient.fetch('*[_type=="room" && _id==$room_id && admin->_id==$user_id ]' + RoomRepository.DEFAULT_PROPS, { room_id, user_id });
         if (room.length > 0)
             return room[0];
         return null;
@@ -87,7 +87,7 @@ export default class RoomRepository extends Repository {
             _type=="room" &&
             privacy=="public" &&
             name match $query
-        ]${this.DEFAULT_PROPS}`, { query: "*" + query + "*" });
+        ]${RoomRepository.DEFAULT_PROPS}`, { query: "*" + query + "*" });
     }
 
     async uploadProfileImage(id: string, filePath: string) {
