@@ -1,8 +1,8 @@
 import { FaUsers } from "react-icons/fa"
 
 interface RoomProps {
-    room: Room,
-    joinRoom?: (room_id: string) => void
+    room: Room;
+    joinRoom?: (room_id: string) => void;
 };
 
 export default function Room({ room, joinRoom }: RoomProps) {

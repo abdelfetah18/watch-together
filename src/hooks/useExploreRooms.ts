@@ -1,38 +1,40 @@
 import { useEffect, useState, useContext } from "react";
-import useAxios from "./useAxios";
-import LoadingContext from "@/contexts/LoadingContext";
 import ToastContext from "@/contexts/ToastContext";
+import { getRooms, joinRoom } from "@/services/RoomService";
+import { useRouter } from "next/router";
 
 export default function useExploreRooms() {
-    const loading = useContext(LoadingContext);
+    const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(false);
     const toastManager = useContext(ToastContext);
-    const axios = useAxios();
     const [rooms, setRooms] = useState<Room[]>([]);
 
     useEffect(() => {
-        getRooms();
+        getRoomsHandler();
     }, []);
 
-    const getRooms = () => {
-        axios.get<HttpResponseData<Room[]>>("/api/explore").then(response => {
-            if (response.status == "success") {
-                setRooms(response.data);
-            }
-        });
+    async function getRoomsHandler(): Promise<void> {
+        setIsLoading(true);
+        const result = await getRooms();
+        if (result.isSuccess()) {
+            setRooms(result.value);
+        } else {
+            toastManager.alertError(result.error);
+        }
+        setIsLoading(false);
     }
 
-    const joinRoom = (room_id: string): void => {
-        loading.show();
-        axios.post<HttpResponseData<Room>, { room_id: string }>("/api/room/join", { room_id }).then(response => {
-            loading.hide();
-            if (response.status == "success") {
-                toastManager.alertSuccess("Room Join success");
-                setRooms(state => state.filter(r => r._id != room_id));
-            } else {
-                toastManager.alertError("Something went wrong");
-            }
-        });
+    async function joinRoomHandler(roomId: string): Promise<void> {
+        const result = await joinRoom(roomId);
+        if (result.isSuccess()) {
+            toastManager.alertSuccess("Room joined succesfuly");
+            router.push(`/room/${roomId}`);
+
+        } else {
+            toastManager.alertError(result.error);
+        }
     }
 
-    return { rooms, joinRoom }
+    return { isLoading, rooms, joinRoomHandler }
 }
