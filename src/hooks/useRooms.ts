@@ -1,21 +1,22 @@
+import { getUserRooms } from "@/services/RoomService";
 import { useEffect, useState } from "react";
-import useAxios from "./useAxios";
 
 export default function useRooms() {
-    const axios = useAxios();
+    const [isLoading, setIsLoading] = useState(false);
     const [rooms, setRooms] = useState<Room[]>([]);
 
     useEffect(() => {
         getRooms();
     }, []);
 
-    const getRooms = () => {
-        axios.get<HttpResponseData<Room[]>>("/api/user/rooms").then(data => {
-            if (data.status == "success") {
-                setRooms(data.data);
-            }
-        });
+    async function getRooms() {
+        setIsLoading(true);
+        const result = await getUserRooms();
+        if (result.isSuccess()) {
+            setRooms(result.value);
+        }
+        setIsLoading(false);
     }
 
-    return { rooms };
+    return { isLoading, rooms };
 }
