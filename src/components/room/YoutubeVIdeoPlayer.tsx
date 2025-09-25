@@ -1,3 +1,4 @@
+import RoomContext from "@/contexts/RoomContext";
 import WebSocketContext from "@/contexts/WebSocketContext";
 import { useContext, useEffect, useRef } from "react";
 
@@ -7,12 +8,18 @@ interface YoutubeVideoPlayerProps {
 }
 
 export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPlayerProps) {
+    const { room } = useContext(RoomContext);
+    const videoPlayer = room.video_player as VideoPlayer;
     const youtubePlayerRef = useRef<YT.Player>(null);
     const { ws } = useContext(WebSocketContext);
 
     const handleVideoPlayerPayload = (payload: VideoPlayerEventPayload): void => {
         if (!isAdmin) {
-            youtubePlayerRef.current.loadVideoById(payload.data.video_url);
+            const url = new URL(youtubePlayerRef.current.getVideoUrl())
+            const _videoId = url.searchParams.get("v")
+            if (_videoId != payload.data.video_url) {
+                youtubePlayerRef.current.loadVideoById(payload.data.video_url);
+            }
             handleAction(payload);
         } else {
             if (payload.action == "sync") {
@@ -65,11 +72,16 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
             videoId,
             width: "100%",
             events: {
-                onStateChange: (event) => {
-                    if (event.target.getPlayerState() == YT.PlayerState.PAUSED) { onPause(); }
-                    if (event.target.getPlayerState() == YT.PlayerState.PLAYING) { onPlay(); }
+                onStateChange: () => {
+                    if (youtubePlayerRef.current.getPlayerState() == YT.PlayerState.PAUSED) { onPause(); }
+                    if (youtubePlayerRef.current.getPlayerState() == YT.PlayerState.PLAYING) { onPlay(); }
                 },
-                onReady: () => { youtubePlayerRef.current.playVideo(); },
+                onReady: () => {
+                    if (videoPlayer.is_playing) {
+                        youtubePlayerRef.current.playVideo();
+                        youtubePlayerRef.current.seekTo(videoPlayer.timestamp, true);
+                    }
+                },
             },
             playerVars: {
                 // controls: 0,
@@ -78,7 +90,11 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
                 loop: 0,
             },
         });
-    }, []);
+
+        return () => {
+            youtubePlayerRef.current.destroy();
+        }
+    }, [videoId]);
 
     useEffect(() => {
         ws.current.addEventListener("video_player", ({ detail }) => {

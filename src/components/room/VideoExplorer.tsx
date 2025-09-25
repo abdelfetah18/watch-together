@@ -17,16 +17,13 @@ const FREE_API_ALERT_MESSAGE = "I am using the youtube free search API\n" +
 //       to learng more about programming and cyber security.
 const randomSearchQueries = ["andreas kling", "liveoverflow", "fireship", "cs50", "Philipp Lackner", "Net Ninja", "Coding With Lewis", "Jacob Sorber"];
 
-interface VideoExplorerProps {
-    videoPlayer: VideoPlayer;
-}
-
-export default function VideoExplorer({ videoPlayer }: VideoExplorerProps) {
+export default function VideoExplorer() {
     const loadingManager = useContext(LoadingContext);
     const userSession = useContext(UserSessionContext);
+    const { room } = useContext(RoomContext);
     const youtube = useYoutube();
 
-    const { room } = useContext(RoomContext);
+    const videoPlayer = room.video_player as VideoPlayer;
     const [search, setSearch] = useState(videoPlayer.video_id ? "" : randomSearchQueries[Math.floor(Math.random() * (randomSearchQueries.length - 1))]);
     const [videoUrl, setVideoUrl] = useState('');
     const [videoId, setVideoId] = useState(videoPlayer.video_id);
