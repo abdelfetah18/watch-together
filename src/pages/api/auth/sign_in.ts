@@ -1,8 +1,9 @@
 import crypto from "crypto";
 
-import { generateToken } from "@/utils/encryption";
+import { ACCESS_TOKEN_EXPIRES_IN, generateToken } from "@/utils/encryption";
 import { userRepository } from "@/repositories";
 import { NextApiRequest, NextApiResponse } from "next";
+import moment from "moment";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method != "POST") {
@@ -29,6 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const tokenData: JWTToken<AuthToken> = { type: "session", data: { user_id: user._id, username: user.username } };
     const accessToken: string = generateToken(tokenData);
 
+    const expires = moment().add(ACCESS_TOKEN_EXPIRES_IN, "second").toDate();
+    res.setHeader("Set-Cookie", `access_token=${accessToken}; Path=/; HttpOnly; Expires=${expires}`);
     res.
         status(200).
         json({

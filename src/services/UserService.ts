@@ -27,6 +27,20 @@ export async function signUp(username: string, email: string, password: string):
     }
 }
 
+
+export async function auth(): Promise<Result<string, User>> {
+    try {
+        const response = await axios.get("/api/user");
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
 export function saveUserSession(userSession: UserSession): void {
     localStorage.setItem("user_session", JSON.stringify(userSession));
 }

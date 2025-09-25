@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FaExclamationTriangle, FaSearch } from "react-icons/fa";
 
 import RoomContext from "@/contexts/RoomContext";
-import UserSessionContext from "@/contexts/UserSessionContext";
+import UserContext from "@/contexts/UserContext";
 import useYoutube from "@/hooks/useYoutube";
 import VideoPlayer from "./VideoPlayer";
 import VideoCard from "./VideoCard";
@@ -19,7 +19,7 @@ const randomSearchQueries = ["andreas kling", "liveoverflow", "fireship", "cs50"
 
 export default function VideoExplorer() {
     const loadingManager = useContext(LoadingContext);
-    const userSession = useContext(UserSessionContext);
+    const user = useContext(UserContext);
     const { room } = useContext(RoomContext);
     const youtube = useYoutube();
 
@@ -123,7 +123,7 @@ export default function VideoExplorer() {
                 <div className={"w-full h-5/6 " + (search.length > 0 ? "hidden" : "")}>
                     {
                         videoId && (
-                            <VideoPlayer videoId={videoId} isAdmin={(room.admin as User)._id == userSession.user_id} />
+                            <VideoPlayer videoId={videoId} isAdmin={(room.admin as User)._id == user._id} />
                         )
                     }
                 </div>

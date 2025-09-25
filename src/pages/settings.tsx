@@ -1,11 +1,11 @@
 import Navigation from "@/components/my_profile/Navigation"
 import { FaCamera, FaKey, FaLaptop, FaUser } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
-import UserSessionContext from "@/contexts/UserSessionContext";
+import UserContext from "@/contexts/UserContext";
 
 
 export default function Settings() {
-    const { user } = useContext(UserSessionContext);
+    const user = useContext(UserContext);
     const [selected, setSelected] = useState("");
 
     useEffect(() => {

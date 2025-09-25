@@ -16,7 +16,7 @@ interface NavigationProps {
 
 export default function Navigation({ selected_label }: NavigationProps) {
     const { theme, toggleTheme } = useContext(ThemeContext);
-    // const userSession = useContext(UserSessionContext);
+    // const user = useContext(UserContext);
 
     return (
         <div className="w-1/6 h-full dark:bg-dark-gray-bg  flex flex-col items-center relative border-r dark:border-r-0">

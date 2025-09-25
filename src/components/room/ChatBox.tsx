@@ -1,13 +1,13 @@
 import ChatBoxContext from "@/contexts/ChatBoxContext";
 import RoomContext from "@/contexts/RoomContext";
-import UserSessionContext from "@/contexts/UserSessionContext";
+import UserContext from "@/contexts/UserContext";
 import useMessage from "@/hooks/useMessage";
 import moment from "moment";
 import { useContext, useEffect, useRef } from "react";
 import { FaAngleDown, FaAngleUp, FaPaperPlane, FaTimes } from "react-icons/fa";
 
 export default function ChatBox({ messagesManager }) {
-    const userSession = useContext(UserSessionContext);
+    const user = useContext(UserContext);
     const { room } = useContext(RoomContext);
     const chatBoxManager = useContext(ChatBoxContext);
     const { message, setMessageContent, sendMessage } = useMessage();
@@ -30,7 +30,7 @@ export default function ChatBox({ messagesManager }) {
 
     const send = () => {
         sendMessage();
-        messagesManager.appendMessage({ ...message, room, user: userSession.user, _createdAt: (new Date()).toDateString() });
+        messagesManager.appendMessage({ ...message, room, user: user, _createdAt: (new Date()).toDateString() });
     }
 
     let lastTimestamp: Date | null = null;
@@ -72,7 +72,7 @@ export default function ChatBox({ messagesManager }) {
                             const canShowDate = (isNewDay(lastTimestamp, currentTimestamp)) || (isNewHour(lastTimestamp, currentTimestamp) || isSignificantGap(lastTimestamp, currentTimestamp))
                             lastTimestamp = currentTimestamp;
 
-                            const isSent = (m.user as User)._id == userSession.user_id;
+                            const isSent = (m.user as User)._id == user._id;
                             const getDate = () => {
                                 if (currentTimestamp >= (new Date(`${moment(moment.now()).format("DD-MM-YYYY")}`))) {
                                     return moment(m._createdAt).format("DD-MM-YYYY");

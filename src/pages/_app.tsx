@@ -1,16 +1,17 @@
 import '@/styles/globals.css';
-import UserSessionContext from '@/contexts/UserSessionContext';
+
 import { useEffect } from 'react';
 import { Roboto } from 'next/font/google';
 import ThemeContext from '@/contexts/ThemeContext';
 import useTheme from '@/hooks/useTheme';
-import useUserSession from '@/hooks/useUserSession';
 import useToast from '@/hooks/useToast';
 import ToastContext from '@/contexts/ToastContext';
 import Toast from '@/components/Toast';
 import LoadingContext from '@/contexts/LoadingContext';
 import useLoading from '@/hooks/useLoading';
 import Loading from '@/components/Loading';
+import useUser from '@/hooks/useUser';
+import UserContext from '@/contexts/UserContext';
 
 const inter = Roboto({ subsets: ['latin'], weight: ['100', '300', '400', '500', '700', '900'] });
 
@@ -21,7 +22,7 @@ const inter = Roboto({ subsets: ['latin'], weight: ['100', '300', '400', '500', 
 function MyApp({ Component, pageProps }) {
   const themeManager = useTheme();
   const loading = useLoading();
-  const { userSession } = useUserSession();
+  const { user } = useUser();
   const toastManager = useToast();
 
   useEffect(() => {
@@ -35,11 +36,11 @@ function MyApp({ Component, pageProps }) {
     <ToastContext.Provider value={toastManager}>
       <ThemeContext.Provider value={themeManager}>
         <LoadingContext.Provider value={loading}>
-          <UserSessionContext.Provider value={userSession}>
+          <UserContext.Provider value={user}>
             <Component {...pageProps} />
             <Toast />
             <Loading />
-          </UserSessionContext.Provider>
+          </UserContext.Provider>
         </LoadingContext.Provider>
       </ThemeContext.Provider>
     </ToastContext.Provider>
