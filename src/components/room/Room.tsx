@@ -19,12 +19,12 @@ export default function Room({ room, joinRoom }: RoomProps) {
 
     return (
         <div className="w-full h-full bg-gray-50 shadow dark:bg-dark-gray-bg flex flex-col items-center rounded-lg">
-            <img className="w-full overflow-auto object-contain rounded-t-lg" src={getImageUrl()} />
+            <img className="w-full overflow-auto object-contain rounded-t-lg aspect-[4/3]" src={getImageUrl()} />
             <div className="w-full flex-grow flex flex-col items-center justify-between p-4 gap-4">
                 <div className="w-full flex flex-col gap-2">
                     <div className="w-full flex flex-col">
                         <div className="text-base text-gray-900 dark:text-gray-100 font-medium">{room.name}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-500">{room.bio || 'No Description'}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-500">{room.bio}</div>
                     </div>
                     <div className="w-full flex items-center flex-wrap gap-1">
                         {

@@ -10,14 +10,14 @@ export default async function handler(req, res) {
     const room: Room = req.body as Room;
 
     const errors = validateInput(room);
-    if (errors.length > 0) {
-        res.status(200).json({ status: "error", data: errors });
+    if (Object.keys(errors).length > 0) {
+        res.status(400).json({ status: "error", data: errors });
         return;
     }
 
     const roomWithSameName = await roomRepository.getRoomByName(room.name);
     if (roomWithSameName) {
-        res.status(200).json({ status: "error", data: ["Room name already exists!"] });
+        res.status(400).json({ status: "error", data: { name: "room with that name already exists." } });
         return;
     }
 
@@ -66,22 +66,30 @@ export default async function handler(req, res) {
 }
 
 function validateInput(room: Room) {
-    let errors: string[] = [];
+    let errors: Record<string, string> = {};
 
     if (room.name.length == 0) {
-        errors.push('Room name must not be empty');
+        errors["name"] = "Name field is required.";
     }
 
     if (room.bio.length == 0) {
-        errors.push('Room description must not be empty');
+        errors["bio"] = "Bio field is required.";
     }
 
     if (room.privacy == 'private' && room.password.length == 0) {
-        errors.push('Private rooms must have a password');
+        errors["privacy"] = "Privacy field is required.";
     }
 
     if (room.privacy != 'private' && room.privacy != 'public') {
-        errors.push('Room privacy must be ever "private" or "public"');
+        errors["privacy"] = "Privacy field can be ever 'private' or 'public'.";
+    }
+
+    if (room.privacy == "private" && room.password.length == 0) {
+        errors["password"] = "The room privacy is set to private so Password field is required.";
+    }
+
+    if (room.categories.length == 0) {
+        errors["categories"] = "At least add one category.";
     }
 
     return errors;
