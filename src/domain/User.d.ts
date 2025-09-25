@@ -10,3 +10,8 @@ interface CreateUser {
     email: string;
     password: string;
 }
+
+interface UserCredentials {
+    username: string;
+    password: string;
+}

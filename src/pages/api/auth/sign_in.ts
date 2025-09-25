@@ -15,14 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { username, password } = req.body;
     const user = await userRepository.getUserWithPasswordByUsername(username);
     if (!user) {
-        res.status(200).json({ status: "error", message: "user not found." });
+        res.status(404).json({ status: "error", message: "user not found." });
         return;
     }
 
     const [hashedPassword, salt] = user.password.split(".");
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     if (hash != hashedPassword) {
-        res.status(200).json({ status: "error", message: "wrong password." });
+        res.status(400).json({ status: "error", message: "wrong password." });
         return;
     }
 
@@ -34,6 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         json({
             status: "success",
             message: "sign in successfully",
-            data: { token: accessToken },
+            data: { access_token: accessToken, user_id: user._id, username, user } as UserSession,
         });
 }
