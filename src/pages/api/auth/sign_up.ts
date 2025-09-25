@@ -17,13 +17,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { username, email, password } = req.body;
         const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (!email.match(emailRegex)) {
-            res.status(200).json({ status: "error", message: "email not valid!" });
+            res.status(400).json({ status: "error", message: "email not valid!" });
             return;
         }
 
         const user = await userRepository.getUserByUsername(username);
         if (user) {
-            res.status(200).json({ status: "error", message: "username already in use!" });
+            res.status(400).json({ status: "error", message: "username already in use!" });
             return;
         }
 
@@ -33,9 +33,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const newUser = await userRepository.createUser({ username, email, password: hash });
         const token_data: JWTToken<AuthToken> = { type: "session", data: { user_id: newUser._id, username: newUser.username } };
         const access_token: string = generateToken(token_data);
-        res.status(200).json({ status: "success", message: "sign_up successfuly!", data: { token: access_token } });
+        res.status(200).json({
+            status: "success",
+            message: "sign_up successfuly!",
+            data: {
+                access_token,
+                user_id: newUser._id,
+                username: newUser.username,
+                user: newUser,
+            } as UserSession
+        });
 
     } catch (err) {
-        res.status(200).json({ status: "error", message: err.CODE, error: err });
+        res.status(400).json({ status: "error", message: err.CODE, error: err });
     }
 }
