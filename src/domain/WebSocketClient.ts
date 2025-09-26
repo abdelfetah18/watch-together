@@ -30,6 +30,10 @@ export class WebSocketClient {
         this.ws.addEventListener(type, listener, options);
     }
 
+    removeEventListener<K extends keyof WSEvent>(type: K, listener: (this: WebSocket, ev: WSEvent[K]) => any, options?: boolean | AddEventListenerOptions): void {
+        this.ws.removeEventListener(type, listener, options);
+    }
+
     send<Payload>(eventName: keyof WSEvent, payload: Payload) {
         this.ws.send(JSON.stringify({ eventName, payload }));
     }

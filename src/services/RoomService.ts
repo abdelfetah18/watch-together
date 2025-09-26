@@ -94,3 +94,69 @@ export async function uploadProfileImage(roomId: string, profileImage: File): Pr
         }
     }
 }
+
+export async function searchYoutube(query: string): Promise<Result<string, YoutubeVideo[]>> {
+    try {
+        const response = await axios.get(`/api/room/youtube_search?q=${query}`);
+        const body = response.data;
+        return Result.success(body.data.videos);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
+
+export async function getRoomById(id: string): Promise<Result<string, Room>> {
+    try {
+        const response = await axios.get<HttpResponseData<Room[]>>(`/api/room/${id}`);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
+export async function getMessages(roomId: string): Promise<Result<string, Message[]>> {
+    try {
+        const response = await axios.get<HttpResponseData<Message[]>>(`/api/room/chat?room_id=${roomId}`);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
+export async function getInviteURL(roomId: string): Promise<Result<string, string>> {
+    try {
+        const response = await axios.post("/api/room/invite_url", { room_id: roomId });
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
+export async function getMembers(roomId: string): Promise<Result<string, RoomMember[]>> {
+    try {
+        const response = await axios.post("/api/room/members", { room_id: roomId });
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}

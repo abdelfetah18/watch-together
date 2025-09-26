@@ -28,7 +28,7 @@ export default function VideoCard({ selectVideo, videoId, thumbnail, title, chan
     }
 
     return (
-        <div onClick={onClick} className="w-1/4 mb-2 flex flex-col cursor-pointer dark:hover:bg-gray-800 hover:bg-gray-100 p-2 rounded-lg duration-300 active:scale-105">
+        <div onClick={onClick} className="w-full flex flex-col cursor-pointer dark:hover:bg-gray-800 hover:bg-gray-100 p-2 rounded-lg duration-300 active:scale-105">
             <div className="aspect-video w-full relative">
                 <img alt="profile_image" className="w-full rounded-md" src={thumbnail} />
                 <div className="absolute right-1 bottom-1  bg-black/80 text-xs px-2 py-1 text-gray-50">{timestamp}</div>

@@ -1,16 +1,17 @@
-import ChatBoxContext from "@/contexts/ChatBoxContext";
-import RoomContext from "@/contexts/RoomContext";
 import UserContext from "@/contexts/UserContext";
-import useMessage from "@/hooks/useMessage";
+import useChat from "@/hooks/useChat";
 import moment from "moment";
-import { useContext, useEffect, useRef } from "react";
-import { FaAngleDown, FaAngleUp, FaPaperPlane, FaTimes } from "react-icons/fa";
+import { useContext, useEffect, useRef, useState } from "react";
+import { FaPaperPlane } from "react-icons/fa";
 
-export default function ChatBox({ messagesManager }) {
+interface ChatBoxProps {
+    room: Room;
+}
+
+export default function ChatBox({ room }: ChatBoxProps) {
     const user = useContext(UserContext);
-    const { room } = useContext(RoomContext);
-    const chatBoxManager = useContext(ChatBoxContext);
-    const { message, setMessageContent, sendMessage } = useMessage();
+    const [messageContent, setMessageContent] = useState("");
+    const { messages, sendMessage } = useChat(room._id);
     const messagesWrapperRef = useRef<HTMLDivElement>();
 
     useEffect(() => {
@@ -18,19 +19,17 @@ export default function ChatBox({ messagesManager }) {
             behavior: "smooth",
             top: messagesWrapperRef.current.scrollHeight
         });
-    }, [messagesManager.messages]);
-
-    const toggleMinimize = () => {
-        if (chatBoxManager.isMinimized) {
-            chatBoxManager.maximize();
-        } else {
-            chatBoxManager.minimize();
-        }
-    }
+    }, [messages]);
 
     const send = () => {
-        sendMessage();
-        messagesManager.appendMessage({ ...message, room, user: user, _createdAt: (new Date()).toDateString() });
+        const message: Message = {
+            room,
+            user,
+            type: "text",
+            message: messageContent,
+            _createdAt: (new Date()).toDateString(),
+        };
+        sendMessage(message);
     }
 
     let lastTimestamp: Date | null = null;
@@ -53,20 +52,15 @@ export default function ChatBox({ messagesManager }) {
 
 
     return (
-        <div className="fixed bottom-0 right-10 w-96 flex flex-col items-center bg-gray-100 shadow-dark shadow-xl dark:bg-dark-gray-bg rounded-lg overflow-auto border dark:border-dark-gray border-gray-200">
-            <div className="w-full px-4 flex items-center justify-between py-2 text-gray-100 dark:bg-dark-gray-bg bg-light-gray dark:shadow-xl border dark:border-dark-gray border-gray-200">
+        <div className="w-full flex flex-col items-center rounded-xl overflow-auto border dark:border-dark-gray-bg border-gray-200">
+            <div className="w-full px-4 py-2 flex items-center justify-between text-gray-100 border-b dark:border-dark-gray-bg border-gray-200">
                 <div className="font-semibold text-gray-900 dark:text-gray-50">Chat</div>
-                <div className="flex items-center text-gray-900 dark:text-gray-50">
-                    {chatBoxManager.isMinimized && <FaAngleUp onClick={toggleMinimize} className="cursor-pointer hover:text-gray-400" title="Maximize" />}
-                    {!chatBoxManager.isMinimized && <FaAngleDown onClick={toggleMinimize} className="cursor-pointer hover:text-gray-400" title="Maximize" />}
-                    <FaTimes onClick={() => { chatBoxManager.close(); }} className="cursor-pointer ml-2 hover:text-gray-400" title="Close" />
-                </div>
             </div>
 
-            <div className={`w-full flex-col overflow-clip ${chatBoxManager.isMinimized ? "h-0" : ""}`}>
-                <div ref={messagesWrapperRef} className="w-full flex flex-col h-96 overflow-auto">
+            <div className={"w-full flex-col overflow-clip"}>
+                <div ref={messagesWrapperRef} className="w-full flex flex-col h-96 overflow-auto py-2 px-4">
                     {
-                        messagesManager.messages.map((m, index) => {
+                        messages.map((m, index) => {
                             const currentTimestamp = new Date(m._createdAt);
 
                             const canShowDate = (isNewDay(lastTimestamp, currentTimestamp)) || (isNewHour(lastTimestamp, currentTimestamp) || isSignificantGap(lastTimestamp, currentTimestamp))
@@ -76,7 +70,7 @@ export default function ChatBox({ messagesManager }) {
                             const getDate = () => {
                                 if (currentTimestamp >= (new Date(`${moment(moment.now()).format("DD-MM-YYYY")}`))) {
                                     return moment(m._createdAt).format("DD-MM-YYYY");
-                                } else if (index == messagesManager.messages.length - 1) {
+                                } else if (index == messages.length - 1) {
                                     return `${isSent ? "sent" : "received"} ${moment(m._createdAt).fromNow()}`
                                 } else {
                                     return moment(m._createdAt).fromNow();
@@ -91,17 +85,17 @@ export default function ChatBox({ messagesManager }) {
                                         </div>
                                         <div className="w-full flex flex-row items-center">
                                             {
-                                                (canShowDate && index == messagesManager.messages.length - 1) && (
+                                                (canShowDate && index == messages.length - 1) && (
                                                     <div className="w-full text-right text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
                                             {
-                                                (!canShowDate && index == messagesManager.messages.length - 1) && (
+                                                (!canShowDate && index == messages.length - 1) && (
                                                     <div className="w-full text-right text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
                                             {
-                                                (canShowDate && index != messagesManager.messages.length - 1) && (
+                                                (canShowDate && index != messages.length - 1) && (
                                                     <div className="w-full text-center text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
@@ -119,17 +113,17 @@ export default function ChatBox({ messagesManager }) {
                                         </div>
                                         <div className="w-full flex flex-row items-center">
                                             {
-                                                (canShowDate && index == messagesManager.messages.length - 1) && (
+                                                (canShowDate && index == messages.length - 1) && (
                                                     <div className="w-full pl-12 text-left text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
                                             {
-                                                (!canShowDate && index == messagesManager.messages.length - 1) && (
+                                                (!canShowDate && index == messages.length - 1) && (
                                                     <div className="w-full pl-12 text-left text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
                                             {
-                                                (canShowDate && index != messagesManager.messages.length - 1) && (
+                                                (canShowDate && index != messages.length - 1) && (
                                                     <div className="w-full text-center text-gray-400 text-xs px-2">{getDate()}</div>
                                                 )
                                             }
@@ -140,8 +134,8 @@ export default function ChatBox({ messagesManager }) {
                         })
                     }
                 </div>
-                <div className="w-full flex flex-row items-center p-2">
-                    <input onKeyDown={(evt) => { if (evt.code === "Enter") { send(); } }} onChange={(evt) => setMessageContent(evt.target.value)} value={message.message} className="mr-2 px-4 py-2 flex-grow dark:bg-dark-gray bg-white border dark:border-none rounded-full dark:text-gray-50 text-gray-900 focus:outline-none placeholder:text-gray-400" type="text" placeholder="Type a message..." />
+                <div className="w-full flex flex-row items-center p-2 border-t dark:border-dark-gray-bg border-gray-200">
+                    <input onKeyDown={(evt) => { if (evt.code === "Enter") { send(); } }} onChange={(evt) => setMessageContent(evt.target.value)} value={messageContent} className="mr-2 px-4 py-2 flex-grow dark:bg-dark-gray-bg bg-white border dark:border-none rounded-full dark:text-gray-50 text-gray-900 focus:outline-none placeholder:text-gray-400" type="text" placeholder="Type a message..." />
                     <button onClick={send} className="rounded-full bg-primary-color border dark:border-none py-2 px-4 text-xl text-sky-50 duration-300 active:scale-105"><FaPaperPlane /></button>
                 </div>
             </div>

@@ -12,32 +12,32 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
     const host_url: string = process.env.HOST_URL || "http://localhost:4000";
 
     ws.on("connection", async (client: ClientSocket, request) => {
-        let url: URL = new URL(host_url + "/" + request.url);
-        let room_id: string = url.searchParams.get("room_id");
-        let access_token: string = url.searchParams.get("access_token");
+        const url: URL = new URL(host_url + "/" + request.url);
+        const room_id: string = url.searchParams.get("room_id");
+        const cookies = Object.fromEntries(request.headers.cookie.split(";").map(cookie => cookie.split("=")));
+        const accessToken: string = cookies["access_token"] || url.searchParams.get("access_token");
 
-        if (!access_token) {
+        if (!accessToken) {
             client.close(client.CLOSING, "No access_token.");
             return;
         }
 
-        let token_payload: JWTToken<AuthToken> = verifyToken(access_token);
+        const token_payload: JWTToken<AuthToken> = verifyToken(accessToken);
         if (!token_payload) {
             client.close(client.CLOSING, "Bad access_token.");
             return;
         }
 
         const user: User = await userRepository.getUserById(token_payload.data.user_id);
-        client.userSession = { access_token, user, user_id: user._id, username: user.username };
+        client.userSession = { access_token: accessToken, user, user_id: user._id, username: user.username };
 
-        let room: Room = await roomRepository.getRoomById(room_id);
+        const room: Room = await roomRepository.getRoomById(room_id);
         if (!room) {
             client.close(client.CLOSING, 'Room does not exist.');
             return;
         }
 
         // FIXME: Check if user is a member of that room
-
         let online_room: WSRoom = ONLINE_ROOMS.get(room._id);
         if (online_room == undefined) {
             ONLINE_ROOMS.set(room._id, new WSRoom(room));
@@ -50,46 +50,67 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
         }
 
         client.on('message', (data) => {
-            let { eventName, payload } = JSON.parse(data.toString());
-            client.emit(eventName, payload);
+            try {
+                const { eventName, payload } = JSON.parse(data.toString());
+                if (!["chat", "video_player"].includes(eventName)) {
+                    return;
+                }
+
+                client.emit(eventName, payload);
+            } catch (error) {
+                console.error("bad web socket message", error);
+            }
         });
 
         client.on("chat", async (payload: ChatEventPayload) => {
-            let { message, type } = payload;
-            let message_ = await messagesRepository.createMessage({
-                room: {
-                    _type: "reference",
-                    _ref: room_id
-                },
-                user: {
-                    _type: "reference",
-                    _ref: client.userSession.user_id
-                },
-                message,
-                type
-            });
+            try {
+                const { message, type } = payload;
+                const allowedMessageTypes: MessageType[] = ["text", "image"];
+                if (message.length == 0 || !allowedMessageTypes.includes(type)) {
+                    return;
+                }
 
-            let msg = await messagesRepository.getMessageById(message_._id);
-            online_room.broadcast(client, "chat", msg);
+                const message_ = await messagesRepository.createMessage({
+                    room: {
+                        _type: "reference",
+                        _ref: room_id
+                    },
+                    user: {
+                        _type: "reference",
+                        _ref: client.userSession.user_id
+                    },
+                    message,
+                    type
+                });
+
+                const msg = await messagesRepository.getMessageById(message_._id);
+                online_room.broadcast(client, "chat", msg);
+            } catch (error) {
+                console.error("bad chat payload", error);
+            }
         });
 
         client.on("video_player", async (payload: VideoPlayerEventPayload) => {
-            let { action } = payload;
-            if (action != "sync") {
-                // if (client.member_has_access)
-                if (online_room.admin()._id == client.userSession.user_id) {
-                    online_room.broadcast(client, "video_player", payload);
+            try {
+                const { action } = payload;
+                if (action != "sync") {
+                    // if (client.member_has_access)
+                    if (online_room.admin()._id == client.userSession.user_id) {
+                        online_room.broadcast(client, "video_player", payload);
+                    }
+                } else {
+                    online_room.send_to_admin("video_player", payload);
                 }
-            } else {
-                online_room.send_to_admin("video_player", payload);
-            }
 
-            if (online_room.admin()._id == client.userSession.user_id) {
-                await videoPlayerRepository.updateVideoPlayerById((room.video_player as VideoPlayer)._id, {
-                    is_playing: action == "play",
-                    timestamp: payload.data.timestamp,
-                    video_id: payload.data.video_url,
-                });
+                if (online_room.admin()._id == client.userSession.user_id) {
+                    await videoPlayerRepository.updateVideoPlayerById((room.video_player as VideoPlayer)._id, {
+                        is_playing: action == "play",
+                        timestamp: payload.data.timestamp,
+                        video_id: payload.data.video_url,
+                    });
+                }
+            } catch (error) {
+                console.error("bad video_player payload", error);
             }
         });
 
@@ -104,7 +125,6 @@ export default function createWebSocketServer(server: HttpServer): WSServer {
 }
 
 /*
-
     WebSocket Handler Protocol:
         data: { eventName, payload }
         

@@ -1,19 +1,22 @@
-import RoomContext from "@/contexts/RoomContext";
-import WebSocketContext from "@/contexts/WebSocketContext";
-import { useContext, useEffect, useRef } from "react";
+import { WebSocketClient } from "@/domain/WebSocketClient";
+import { RefObject, useEffect, useRef } from "react";
 
 interface YoutubeVideoPlayerProps {
     videoId: string;
     isAdmin: boolean;
+    ws: RefObject<WebSocketClient>;
+    room: Room;
 }
 
-export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPlayerProps) {
-    const { room } = useContext(RoomContext);
+export default function YoutubeVideoPlayer({ room, videoId, isAdmin, ws }: YoutubeVideoPlayerProps) {
     const videoPlayer = room.video_player as VideoPlayer;
     const youtubePlayerRef = useRef<YT.Player>(null);
-    const { ws } = useContext(WebSocketContext);
 
     const handleVideoPlayerPayload = (payload: VideoPlayerEventPayload): void => {
+        if (!youtubePlayerRef.current) {
+            return;
+        }
+
         if (!isAdmin) {
             const url = new URL(youtubePlayerRef.current.getVideoUrl())
             const _videoId = url.searchParams.get("v")
@@ -33,6 +36,11 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
     }
 
     const handleAction = (payload: VideoPlayerEventPayload) => {
+        if (!youtubePlayerRef.current) {
+            return;
+        }
+
+
         if (payload.action == "play") {
             youtubePlayerRef.current.playVideo();
             youtubePlayerRef.current.seekTo(payload.data.timestamp, true);
@@ -54,6 +62,10 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
     }
 
     const onPause = () => {
+        if (!youtubePlayerRef.current) {
+            return;
+        }
+
         if (isAdmin) {
             let payload: VideoPlayerEventPayload = { action: "pause", data: { video_url: videoId, timestamp: youtubePlayerRef.current.getCurrentTime() } };
             ws.current.send("video_player", payload)
@@ -61,6 +73,10 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
     }
 
     const onPlay = () => {
+        if (!youtubePlayerRef.current) {
+            return;
+        }
+
         if (isAdmin) {
             let payload: VideoPlayerEventPayload = { action: "play", data: { video_url: videoId, timestamp: youtubePlayerRef.current.getCurrentTime() } };
             ws.current.send("video_player", payload)
@@ -110,6 +126,6 @@ export default function YoutubeVideoPlayer({ videoId, isAdmin }: YoutubeVideoPla
     }, []);
 
     return (
-        <div id="player" className="w-11/12 h-full"></div>
+        <div id="player" className="w-full h-full aspect-video rounded-lg"></div>
     )
 }
