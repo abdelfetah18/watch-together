@@ -112,7 +112,7 @@ export default function Room() {
                             {videoId.length > 0 ? (
                                 <VideoPlayer videoId={videoId} isAdmin={(room.admin as User)._id == user._id} room={room} ws={ws.ws} />
                             ) : (
-                                <div className="w-full flex flex-col items-center text-white font-bold text-2xl bg-dark-gray-bg rounded-lg border border-zinc-700 py-4">Try searching to get started</div>
+                                <div className="w-full flex flex-col items-center text-black dark:text-white font-bold text-2xl bg-light-gray dark:bg-dark-gray-bg rounded-lg border dark:border-zinc-700 py-4">Try searching to get started</div>
                             )}
                         </div>
                         <div className="w-full">

@@ -64,8 +64,8 @@ export default function RoomCard({ room }: RoomCardProps) {
                 <div className="w-full text-sm dark:text-gray-50 text-gray-900 font-semibold">{room.name}</div>
                 <div className="w-full text-xs text-gray-500">{room.bio || 'Bio'}</div>
             </div>
-            <div ref={menuRef} className="dark:text-gray-100 text-gray-900 my-auto cursor-pointer hover:text-gray-400 relative">
-                <div onClick={() => setIsOpen(state => !state)} className="bg-dark-gray-bg hover:bg-zinc-800 p-2 rounded-full"><FaEllipsisH /></div>
+            <div ref={menuRef} className="dark:text-gray-100 text-gray-900 my-auto cursor-pointer hover:text-white dark:hover:text-gray-400 relative">
+                <div onClick={() => setIsOpen(state => !state)} className="bg-gray-200 dark:bg-dark-gray-bg hover:bg-gray-300 dark:hover:bg-zinc-800 p-2 rounded-full"><FaEllipsisH /></div>
                 {
                     isOpen && (
                         <div className="absolute w-60 right-0 top-full mt-2 bg-gray-200 dark:bg-dark-gray-bg rounded-lg py-2 border border-gray-200 dark:border-zinc-700 z-10">
