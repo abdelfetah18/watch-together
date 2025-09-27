@@ -1,7 +1,7 @@
 import ThemeContext from "@/contexts/ThemeContext";
 import UserContext from "@/contexts/UserContext";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaMoon, FaSearch, FaSun } from "react-icons/fa";
 
 interface HeaderProps {
@@ -10,11 +10,28 @@ interface HeaderProps {
 
 export default function Header({ searchHandler }: HeaderProps) {
     const user = useContext(UserContext);
-    
+
     const { theme, toggleTheme } = useContext(ThemeContext);
-    
+
     const [query, setQuery] = useState("");
+
+    const menuRef = useRef<HTMLDivElement>(null);
     const [showMenu, setShowMenu] = useState(false);
+
+    useEffect(() => {
+        const callback = (event: PointerEvent) => {
+            if (menuRef.current && menuRef.current.contains(event.target as Node)) {
+                return;
+            }
+            setShowMenu(false);
+        };
+
+        if (showMenu) {
+            document.addEventListener("click", callback);
+        } else {
+            document.removeEventListener("click", callback);
+        }
+    }, [showMenu]);
 
     return (
         <div className="w-full flex flex-row items-center justify-between gap-4 py-1 px-8">
@@ -37,7 +54,7 @@ export default function Header({ searchHandler }: HeaderProps) {
                 />
             </form>
             <div className="flex items-center">
-                <div className="relative w-10 h-10 rounded-full">
+                <div ref={menuRef} className="relative w-10 h-10 rounded-full">
                     <img onClick={() => setShowMenu(state => !state)} className={`w-full h-full rounded-full cursor-pointer border-gray-200 dark:border-zinc-700 ${showMenu ? "border" : "border-none"}`} src={user.profile_image?.url || "/profile_1_1.png"} />
                     {
                         showMenu && (

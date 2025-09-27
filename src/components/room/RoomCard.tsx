@@ -1,6 +1,6 @@
 import ToastContext from "@/contexts/ToastContext";
 import { getInviteURL, getMembers } from "@/services/RoomService";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaEdit, FaEllipsisH, FaTimes, FaUserPlus, FaUsers } from "react-icons/fa";
 
 interface RoomCardProps {
@@ -10,7 +10,10 @@ interface RoomCardProps {
 export default function RoomCard({ room }: RoomCardProps) {
     const toastManager = useContext(ToastContext);
     const [isOpen, setIsOpen] = useState(false);
+
+    const menuRef = useRef<HTMLDivElement>(null);
     const [showMemebersList, setShowMemebersList] = useState(false);
+
     const [members, setMembers] = useState<RoomMember[]>([]);
 
     async function copyInviteURLHandler(): Promise<void> {
@@ -24,6 +27,20 @@ export default function RoomCard({ room }: RoomCardProps) {
     }
 
     useEffect(() => { getRoomMembersHandler(); }, []);
+    useEffect(() => {
+        const callback = (event: PointerEvent) => {
+            if (menuRef.current && menuRef.current.contains(event.target as Node)) {
+                return;
+            }
+            setIsOpen(false);
+        };
+
+        if (isOpen) {
+            document.addEventListener("click", callback);
+        } else {
+            document.removeEventListener("click", callback);
+        }
+    }, [isOpen]);
 
     async function getRoomMembersHandler(): Promise<void> {
         const result = await getMembers(room._id);
@@ -46,7 +63,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                 <div className="w-full text-sm dark:text-gray-50 text-gray-900 font-semibold">{room.name}</div>
                 <div className="w-full text-xs text-gray-500">{room.bio || 'Bio'}</div>
             </div>
-            <div className="dark:text-gray-100 text-gray-900 my-auto cursor-pointer hover:text-gray-400 relative">
+            <div ref={menuRef} className="dark:text-gray-100 text-gray-900 my-auto cursor-pointer hover:text-gray-400 relative">
                 <div onClick={() => setIsOpen(state => !state)} className="bg-dark-gray-bg hover:bg-zinc-800 p-2 rounded-full"><FaEllipsisH /></div>
                 {
                     isOpen && (
