@@ -10,6 +10,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import YoutubeVideoListSkeleton from "@/components/room/YoutubeVideoListSkeleton";
 import YoutubeVideoList from "@/components/room/YoutubeVideoList";
 import VideoPlayer from "@/components/room/VideoPlayer";
+import { FaAngleLeft } from "react-icons/fa";
 
 export default function Room() {
     const router = useRouter();
@@ -97,7 +98,13 @@ export default function Room() {
                     isSearchLoading ? (
                         <YoutubeVideoListSkeleton />
                     ) : (
-                        <YoutubeVideoList onSelectVideo={onSelectVideoHandler} videos={youtubeVideos} />
+                        <div className="w-full flex flex-col gap-2">
+                            <div onClick={() => setShowSearchResult(false)} className="w-full px-8 flex items-center gap-2 dark:text-white text-black cursor-pointer hover:underline">
+                                <FaAngleLeft />
+                                <div>Go Back</div>
+                            </div>
+                            <YoutubeVideoList onSelectVideo={onSelectVideoHandler} videos={youtubeVideos} />
+                        </div>
                     )
                 ) : (
                     <div className="w-full grid grid-cols-3 px-8 gap-8">

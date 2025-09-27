@@ -47,7 +47,6 @@ export default function RoomCard({ room }: RoomCardProps) {
     async function getRoomMembersHandler(): Promise<void> {
         const result = await getMembers(room._id);
         if (result.isSuccess()) {
-            console.log("members:", result.value);
             setMembers(result.value);
         } else {
             toastManager.alertError(result.error);
