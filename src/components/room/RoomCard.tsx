@@ -9,9 +9,11 @@ interface RoomCardProps {
 
 export default function RoomCard({ room }: RoomCardProps) {
     const toastManager = useContext(ToastContext);
-    const [isOpen, setIsOpen] = useState(false);
 
     const menuRef = useRef<HTMLDivElement>(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const memebersListRef = useRef<HTMLDivElement>(null);
     const [showMemebersList, setShowMemebersList] = useState(false);
 
     const [members, setMembers] = useState<RoomMember[]>([]);
@@ -91,8 +93,15 @@ export default function RoomCard({ room }: RoomCardProps) {
             </div>
 
             {showMemebersList && (
-                <div className="absolute left-0 top-0 w-full h-full bg-black/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-                    <div className="w-1/2 min-h-1/2 max-h-[80%] flex flex-col bg-gray-200 dark:bg-dark-gray-bg rounded-lg">
+                <div
+                    onClick={(event) => {
+                        if (memebersListRef.current && memebersListRef.current.contains(event.target as Node)) {
+                            return;
+                        }
+                        setShowMemebersList(false);
+                    }}
+                    className="absolute left-0 top-0 w-full h-full bg-black/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+                    <div ref={memebersListRef} className="w-1/2 min-h-1/2 max-h-[80%] flex flex-col bg-gray-200 dark:bg-dark-gray-bg rounded-lg">
                         <div className="w-full flex items-center justify-between text-black dark:text-white border-b border-gray-300 dark:border-zinc-700 py-4 px-8">
                             <div className="flex items-center gap-2">
                                 <FaUsers />
