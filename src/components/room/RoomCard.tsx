@@ -68,7 +68,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                 <div onClick={() => setIsOpen(state => !state)} className="bg-dark-gray-bg hover:bg-zinc-800 p-2 rounded-full"><FaEllipsisH /></div>
                 {
                     isOpen && (
-                        <div className="absolute right-0 w-80 top-full mt-2 flex flex-col items-center dark:bg-dark-gray-bg bg-light-gray shadow-xl rounded-lg">
+                        <div className="absolute w-60 right-0 top-full mt-2 bg-gray-200 dark:bg-dark-gray-bg rounded-lg py-2 border border-gray-200 dark:border-zinc-700 z-10">
                             <div className="w-full flex flex-col gap-2 items-start py-2">
                                 <a href={"/room/" + room._id + "/edit"} className="px-8 py-2 w-full flex items-center gap-4 cursor-pointer text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-zinc-700">
                                     <FaEdit />
