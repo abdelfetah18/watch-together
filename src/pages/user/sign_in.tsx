@@ -2,7 +2,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { saveUserSession, signIn } from "@/services/UserService";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 
 export default function SignIn() {
@@ -18,7 +18,9 @@ export default function SignIn() {
     const [apiError, setApiError] = useState("");
     const [apiSuccess, setApiSuccess] = useState("");
 
-    async function signInHandler() {
+    async function signInHandler(event: FormEvent) {
+        event.preventDefault();
+
         setIsLoading(true);
 
         setApiError("");
@@ -54,9 +56,9 @@ export default function SignIn() {
 
     return (
         <div className="w-screen h-screen bg-dark-gray flex flex-col items-center justify-center">
-            {isLoading && <LoadingComponent/>}
+            {isLoading && <LoadingComponent />}
             <div className="lg:w-1/3 md:w-1/2 w-11/12 bg-dark-gray-bg drop-shadow-2xl py-10 rounded-lg flex flex-col items-center">
-                <div className="w-full flex flex-col items-center px-8 gap-8">
+                <form onSubmit={signInHandler} className="w-full flex flex-col items-center px-8 gap-8">
                     <div className="w-full flex flex-col items-center gap-2">
                         <img src="/logo.png" className="w-20 object-contain" />
                         <div className="text-white text-3xl">Watch Together</div>
@@ -110,8 +112,8 @@ export default function SignIn() {
                             <Link href="/user/sign_up" className="ml-2 text-blue-600 hover:underline">Sign up</Link>
                         </div>
                     </div>
-                    <div onClick={signInHandler} className="w-full cursor-pointer py-2 px-20 bg-blue-800 rounded-lg text-white text-center duration-300 hover:bg-blue-600 select-none active:scale-110">Sign in</div>
-                </div>
+                    <button type="submit" className="w-full cursor-pointer py-2 px-20 bg-blue-800 rounded-lg text-white text-center duration-300 hover:bg-blue-600 select-none active:scale-110">Sign in</button>
+                </form>
             </div>
         </div>
     )
