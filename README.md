@@ -19,10 +19,11 @@ Its a `NextJS` app with [custom server](https://nextjs.org/docs/advanced-feature
 
 ## **Images from the app:**
 
-![1](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/1.png)
-![2](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/2.png)
-![3](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/3.png)
-![4](https://raw.githubusercontent.com/abdelfetah18/WatchTogether/main/public/4.png)
+![1](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/1.png)
+![2](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/2.png)
+![3](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/3.png)
+![4](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/4.png)
+![4](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/5.png)
 
 Thanks for reading and see you in my next project.
 
