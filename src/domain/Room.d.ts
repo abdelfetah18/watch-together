@@ -15,7 +15,7 @@ interface Room {
     password?: string;
     admin?: User | RefDocument;
     creator?: User | RefDocument;
-    categories: RoomCategory[];
+    categories: (RoomCategory | RefDocument)[];
     video_player?: VideoPlayer | RefDocument;
 }
 

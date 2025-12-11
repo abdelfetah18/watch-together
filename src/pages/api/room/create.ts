@@ -21,14 +21,6 @@ export default async function handler(req, res) {
         return;
     }
 
-    const categories: RefDocument[] = [];
-    for (const category of room.categories) {
-        categories.push({
-            _type: "reference",
-            _ref: category._id
-        });
-    }
-
     const videoPlayer = await videoPlayerRepository.createVideoPlayer();
     const createdRoom = await roomRepository.createRoom({
         name: room.name,
@@ -43,7 +35,7 @@ export default async function handler(req, res) {
         },
         privacy: room.privacy,
         password: room.privacy == 'private' ? room.password : '',
-        categories,
+        categories: room.categories as RefDocument[],
         video_player: {
             _type: "reference",
             _ref: videoPlayer._id,

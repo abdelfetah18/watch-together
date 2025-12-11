@@ -29,7 +29,7 @@ export default function Room({ room, joinRoom }: RoomProps) {
                     <div className="w-full flex items-center flex-wrap gap-1">
                         {
                             // NOTE: ALLOW ONLY 5 Categories for a room
-                            room.categories.map((category, index) => {
+                            (room.categories as RoomCategory[]).map((category, index) => {
                                 return (
                                     <div key={index} className="text-xs bg-gray-600 dark:bg-gray-600 text-indigo-50 rounded-full px-2">{category.name}</div>
                                 )
