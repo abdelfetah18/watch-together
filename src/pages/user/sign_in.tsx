@@ -47,7 +47,7 @@ export default function SignIn() {
         if (result.isSuccess()) {
             saveUserSession(result.value);
             setApiSuccess("Sign in successfully.");
-            router.push("/profile");
+            router.push("/explore");
         } else {
             setApiError(result.error);
         }

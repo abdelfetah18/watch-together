@@ -12,7 +12,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     let is_valid: JWTToken<AuthToken> = verifyToken(access_token);
     req.userSession = { access_token, ...is_valid.data };
-    res.redirect("/profile");
+    res.redirect("/explore");
   } catch (err) {
     next();
   }

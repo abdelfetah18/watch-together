@@ -2,6 +2,7 @@ import Navigation from "@/components/my_profile/Navigation"
 import { FaCamera, FaKey, FaLaptop, FaUser } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "@/contexts/UserContext";
+import App from "@/components/Layout/App";
 
 
 export default function Settings() {
@@ -13,9 +14,9 @@ export default function Settings() {
     }, []);
 
     return (
-        <div className="w-full h-screen dark:bg-dark-gray flex flex-row">
+        <App title="settings">
             <Navigation selected_label={"Settings"} />
-            <div className="w-5/6 h-full flex flex-col items-center py-4">
+            <div className="w-4/5 h-full flex flex-col items-center py-4">
                 <div className="w-11/12 flex-grow overflow-auto flex flex-col">
                     <div className="w-full text-xl py-4 font-medium text-gray-900 dark:text-gray-50">Settings</div>
                     <div className="w-full my-4 flex flex-row flex-grow">
@@ -27,7 +28,7 @@ export default function Settings() {
                 </div>
 
             </div>
-        </div>
+        </App>
     )
 }
 

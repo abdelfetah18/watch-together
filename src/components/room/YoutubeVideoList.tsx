@@ -8,7 +8,7 @@ interface YoutubeVideoListProps {
 export default function YoutubeVideoList({ videos, onSelectVideo }: YoutubeVideoListProps) {
     return (
         <div className="w-full grid grid-cols-5 px-8">
-            {videos.length == 0 && (<div>No video found</div>)}
+            {videos.length == 0 && (<div className="col-span-5 text-center text-black dark:text-white">No video found.</div>)}
             {
                 videos.map((youtubeVideo, index) => {
                     return (

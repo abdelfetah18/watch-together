@@ -1,20 +1,19 @@
-import Navigation from "@/components/my_profile/Navigation"
 import useExploreRooms from "@/hooks/useExploreRooms";
 import RoomsList from "@/components/room/RoomsList";
 import RoomsListSkeleton from "@/components/room/RoomsListSkeleton";
+import App from "@/components/Layout/App";
+import Navigation from "@/components/my_profile/Navigation";
 
 export default function Explore() {
     const { rooms, isLoading, joinRoomHandler } = useExploreRooms();
 
     return (
-        <div className="w-full h-screen dark:bg-dark-gray flex flex-row">
+        <App title="explore">
             <Navigation selected_label={"Explore"} />
-            <div className="w-5/6 h-full flex flex-col items-center py-4 overflow-auto">
-                <div className="w-11/12 flex-grow flex flex-col">
-                    <div className="w-full text-xl py-4 font-medium text-gray-900 dark:text-gray-50">Explore</div>
-                    {isLoading ? <RoomsListSkeleton /> : <RoomsList rooms={rooms} joinRoom={joinRoomHandler} />}
-                </div>
+            <div className="w-4/5 h-full px-8 py-2 flex flex-col overflow-auto">
+                <div className="w-full text-xl py-4 font-medium text-gray-900 dark:text-gray-50">Explore</div>
+                {isLoading ? <RoomsListSkeleton /> : <RoomsList rooms={rooms} joinRoom={joinRoomHandler} />}
             </div>
-        </div>
+        </App>
     )
 }

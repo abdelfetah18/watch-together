@@ -1,8 +1,13 @@
-import ThemeContext from "@/contexts/ThemeContext";
-// import UserSessionContext from "@/contexts/UserSessionContext";
-import { useContext, useEffect } from "react";
+import UserContext from "@/contexts/UserContext";
+import Link from "next/link";
+import { useContext } from "react";
 import { IconType } from "react-icons";
-import { FaCog, FaCompass, FaMoon, FaPlus, FaSearch, FaSignOutAlt, FaSun, FaUsers } from "react-icons/fa";
+import {
+    FaCog,
+    FaCompass,
+    FaPlus,
+    FaSearch,
+} from "react-icons/fa";
 
 interface NavItemType {
     label: string;
@@ -15,45 +20,35 @@ interface NavigationProps {
 };
 
 export default function Navigation({ selected_label }: NavigationProps) {
-    const { theme, toggleTheme } = useContext(ThemeContext);
-    // const user = useContext(UserContext);
+    const user = useContext(UserContext);
 
     return (
-        <div className="w-1/6 h-full dark:bg-dark-gray-bg  flex flex-col items-center relative border-r dark:border-r-0">
-            <div className="w-5/6 flex items-center py-4">
-                <img className="w-8 h-8 rounded-full" src="/logo.png" />
-                <div className="ml-2 font-medium text-gray-900 dark:text-gray-50 capitalize">Watch Together</div>
-            </div>
-            {/* <div className="w-5/6 flex items-center py-4">
-                <img className="w-8 h-8 rounded-full" src="/profile_1_1.png" />
-                <div className="ml-2 font-medium text-gray-900 dark:text-gray-50 capitalize">{userSession.username}</div>
-            </div> */}
-
-
-
-            <div className="w-5/6 flex flex-col flex-grow">
-                <div className="w-full flex flex-col items-start mt-16">
-                    {
-                        navigations.map((nav_item, index) => {
-                            useEffect(() => { console.log({ nav_item, selected_label }) }, [])
-                            return (
-                                <NavItem key={index} item={nav_item} selected={nav_item.label == selected_label} />
-                            )
-                        })
-                    }
-                </div>
-
-                <div onClick={toggleTheme} className="w-full flex flex-row items-center text-start hover:text-indigo-800 cursor-pointer py-4 rounded-r-lg duration-300 active:scale-110 text-gray-900 dark:text-gray-50">
-                    {theme == 'dark' && <FaMoon />}
-                    {theme == 'light' && <FaSun />}
-                    <div className="text-sm text-center ml-2 capitalize">{theme} Mode</div>
-                </div>
+        <div className="w-1/5 h-full  flex flex-col items-center relative border-r dark:border-r dark:border-[#2a2a2a] bg-zinc-950">
+            <div className="w-full flex flex-col gap-1 px-2 py-2">
+                {
+                    navigations.map((item, index) => {
+                        return (
+                            <NavItem key={index} item={item} selected={item.label == selected_label} />
+                        )
+                    })
+                }
             </div>
 
-            <a href="/user/sign_out" className="w-5/6 py-8 text-gray-900 dark:text-gray-50 hover:text-sky-600 flex flex-row items-center duration-300 active:scale-110">
-                <FaSignOutAlt />
-                <div className="ml-2">Log out</div>
-            </a>
+            <div className="absolute bottom-0 left-0 w-full p-2">
+                <div className="w-full bg-zinc-900 rounded-lg flex flex-row items-center justify-between py-2 px-4">
+                    <div className="flex flex-row items-center gap-2">
+                        <img
+                            src={user.profile_image.url || "/profile_4_3.png"}
+                            alt="profile picture"
+                            className="w-8 aspect-square object-cover rounded-full"
+                        />
+                        <div className="text-base text-gray-50">{user.username}</div>
+                    </div>
+                    <Link href={"/settings"} className="flex flex-row items-center gap-2 text-white">
+                        <FaCog />
+                    </Link>
+                </div>
+            </div>
         </div>
     )
 }
@@ -64,20 +59,18 @@ interface NavItemProps {
 };
 
 function NavItem({ selected, item: { path, label, Icon } }: NavItemProps) {
-    const default_style = "w-full flex flex-row items-center text-start hover:text-indigo-800 cursor-pointer py-4 rounded-r-lg duration-300 active:scale-110";
+    const default_style = "px-2 py-2 w-full flex items-center gap-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-lg text-sm";
 
     return (
-        <a href={path} className={default_style + (selected ? " font-semibold text-primary-color " : " text-gray-900 dark:text-gray-50")}>
+        <Link href={path} className={`${default_style} ${selected ? "bg-zinc-800 dark:text-gray-50" : "text-gray-900 dark:text-gray-400"}`}>
             <Icon />
-            <div className="text-center ml-2">{label}</div>
-        </a>
+            <div className="capitalize">{label}</div>
+        </Link>
     )
 }
 
-const navigations: NavItemType[] = [
+const navigations = [
     { label: "Search", path: "/search", Icon: FaSearch },
     { label: "Explore", path: "/explore", Icon: FaCompass },
     { label: "Create Room", path: "/room/create", Icon: FaPlus },
-    { label: "My Rooms", path: "/profile", Icon: FaUsers },
-    { label: "Settings", path: "/settings", Icon: FaCog }
-];
+] as const;

@@ -9,7 +9,7 @@ export async function getServerSideProps({ req, query }) {
     if (!isValid) {
         return {
             redirect: {
-                destination: '/profile',
+                destination: '/explore',
                 permanent: false
             }
         };
@@ -49,7 +49,7 @@ export async function getServerSideProps({ req, query }) {
 export default function Invite({ status, message }) {
 
     useEffect(() => {
-        setTimeout(() => window.location.href = "/profile", 3000);
+        setTimeout(() => window.location.href = "/explore", 3000);
     }, []);
 
     return (

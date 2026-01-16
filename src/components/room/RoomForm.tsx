@@ -117,7 +117,7 @@ export default function RoomForm({ isEditState }: RoomFormProps) {
         <div className="w-full h-screen dark:bg-dark-gray flex flex-row">
             {isLoading && <LoadingComponent />}
             <Navigation selected_label={"Create Room"} />
-            <div className="w-5/6 h-full flex flex-col items-center py-4 overflow-auto">
+            <div className="w-4/5 h-full flex flex-col items-center py-4 overflow-auto">
                 <div className="w-full h-full flex flex-col p-8">
                     <div className="w-full h-full flex flex-col gap-10">
                         <div className="w-full text-2xl font-medium text-gray-900 dark:text-gray-50">Create Room</div>

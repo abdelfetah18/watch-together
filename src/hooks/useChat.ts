@@ -22,7 +22,7 @@ export default function useChat(roomId: string) {
         return () => {
             wsRef.current.removeEventListener("chat", chatCallback);
         };
-    }, []);
+    }, [roomId]);
 
     function chatCallback(chatEvent: ChatEvent): void {
         setMessages(state => [...state, chatEvent.detail]);

@@ -1,15 +1,17 @@
-import { RefObject, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import YoutubeVideoPlayer from "./YoutubeVIdeoPlayer";
-import { WebSocketClient } from "@/domain/WebSocketClient";
+import UserContext from "@/contexts/UserContext";
+import useWebSocket from "@/hooks/useWebSocket";
 
 interface VideoPlayerProps {
     videoId: string;
-    isAdmin: boolean;
-    ws: RefObject<WebSocketClient>;
     room: Room;
 };
 
-export default function VideoPlayer({ videoId, isAdmin, room, ws }: VideoPlayerProps) {
+export default function VideoPlayer({ videoId, room }: VideoPlayerProps) {
+    const user = useContext(UserContext);
+    const ws = useWebSocket();
+    const isAdmin = user._id == (room.admin as User)?._id;
     const videoPlayerRef = useRef<VideoPlayerObject>(null);
 
     const handleVideoPlayerPayload = (payload: VideoPlayerEventPayload): void => {
@@ -25,7 +27,7 @@ export default function VideoPlayer({ videoId, isAdmin, room, ws }: VideoPlayerP
                 if (videoPlayerRef.current.getPlayerState() == YT.PlayerState.PLAYING) {
                     action = "play";
                 }
-                ws.current.send<VideoPlayerEventPayload>("video_player", { action, data: { video_url: videoId, timestamp: videoPlayerRef.current.getCurrentTime() } });
+                ws.ws.current.send<VideoPlayerEventPayload>("video_player", { action, data: { video_url: videoId, timestamp: videoPlayerRef.current.getCurrentTime() } });
             }
         }
     }
@@ -53,14 +55,15 @@ export default function VideoPlayer({ videoId, isAdmin, room, ws }: VideoPlayerP
     }
 
     useEffect(() => {
-        ws.current.addEventListener("video_player", ({ detail }) => {
+        ws.connect(room._id);
+        ws.ws.current.addEventListener("video_player", ({ detail }) => {
             handleVideoPlayerPayload(detail);
         });
 
         // FIXME: Find a better way to handle this.
         setTimeout(() => {
             if (!isAdmin) {
-                ws.current.send<VideoPlayerEventPayload>("video_player", { action: "sync", data: { video_url: '', timestamp: 0 } });
+                ws.ws.current.send<VideoPlayerEventPayload>("video_player", { action: "sync", data: { video_url: '', timestamp: 0 } });
             }
         }, 3000);
     }, []);
@@ -73,7 +76,7 @@ export default function VideoPlayer({ videoId, isAdmin, room, ws }: VideoPlayerP
 
         if (isAdmin) {
             let payload: VideoPlayerEventPayload = { action: "pause", data: { video_url: videoId, timestamp: videoPlayerRef.current.getCurrentTime() } };
-            ws.current.send("video_player", payload)
+            ws.ws.current.send("video_player", payload)
         }
     }
 
@@ -84,7 +87,7 @@ export default function VideoPlayer({ videoId, isAdmin, room, ws }: VideoPlayerP
 
         if (isAdmin) {
             let payload: VideoPlayerEventPayload = { action: "play", data: { video_url: videoId, timestamp: videoPlayerRef.current.getCurrentTime() } };
-            ws.current.send("video_player", payload)
+            ws.ws.current.send("video_player", payload)
         }
     }
 

@@ -42,3 +42,8 @@
     background: #aaa;
     cursor: pointer;
 }
+
+.hide-scroll-bar::-webkit-scrollbar-thumb,
+.hide-scroll-bar::-webkit-scrollbar-track {
+    visibility: hidden
+}

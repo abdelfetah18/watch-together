@@ -2,7 +2,7 @@ import { verifyToken } from '../utils/encryption';
 import { NextFunction, Request, Response } from 'express';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-    let protected_paths = ['/profile', '/explore', '/settings', '/search', '/room/create', '/api/explore', '/api/search'];
+    let protected_paths = ['/explore', '/settings', '/search', '/room/create', '/api/explore', '/api/search'];
     if (!protected_paths.includes(req.path)) {
         next();
         return;

@@ -1,22 +1,28 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { getRoomById, searchYoutube } from "@/services/RoomService";
+import { useEffect, useState } from "react";
+import { getRoomById } from "@/services/RoomService";
+import {
+    FaFacebookMessenger,
+    FaUsers,
+} from "react-icons/fa";
+import { RiVideoFill } from "react-icons/ri";
+import App from "@/components/Layout/App";
+import VideoPlayerView from "@/components/VideoPlayerView";
+import ChatView from "@/components/ChatView";
+import MembersView from "@/components/MembersView";
+import RoomActions from "@/components/RoomActions";
+import { IconType } from "react-icons";
 
-import RoomInfo from "@/components/room/RoomInfo";
-import useWebSocket from "@/hooks/useWebSocket";
-import UserContext from "@/contexts/UserContext";
-import Header from "@/components/room/Header";
-import LoadingComponent from "@/components/LoadingComponent";
-import YoutubeVideoListSkeleton from "@/components/room/YoutubeVideoListSkeleton";
-import YoutubeVideoList from "@/components/room/YoutubeVideoList";
-import VideoPlayer from "@/components/room/VideoPlayer";
-import { FaAngleLeft } from "react-icons/fa";
+type RoomView = "chat" | "video player" | "members"
+
+const views: { name: RoomView; Icon: IconType }[] = [
+    { name: "members", Icon: FaUsers },
+    { name: "chat", Icon: FaFacebookMessenger },
+    { name: "video player", Icon: RiVideoFill },
+];
 
 export default function Room() {
     const router = useRouter();
-    const user = useContext(UserContext);
-    const ws = useWebSocket();
-    const [isLoading, setIsLoading] = useState(true);
     const [room, setRoom] = useState<Room>({
         name: "",
         bio: "",
@@ -25,16 +31,11 @@ export default function Room() {
         profile_image: null,
         total_members: 0,
     });
-
-    const [youtubeVideos, setYoutubeVideos] = useState<YoutubeVideo[]>([]);
-    const [isSearchLoading, setIsSearchLoading] = useState(false);
-    const [showSearchResult, setShowSearchResult] = useState(false);
-
-    const [videoId, setVideoId] = useState("");
+    const [_, setIsLoading] = useState(true);
+    const [currentView, setCurrentView] = useState<RoomView>("video player");
 
     useEffect(() => {
         if (router.query.room_id) {
-            ws.connect(router.query.room_id.toString());
             getRoomByIdHandler();
         }
     }, [router.query]);
@@ -45,82 +46,42 @@ export default function Room() {
         if (result.isSuccess()) {
             const room = result.value;
             setRoom(room);
-            if (room.video_player) {
-                const videoPlayer = room.video_player as VideoPlayer;
-                setVideoId(videoPlayer.video_id);
-            }
         } else {
 
         }
         setIsLoading(false);
     }
 
-
-    async function searchHandler(query: string): Promise<void> {
-        setIsSearchLoading(true);
-        setShowSearchResult(true);
-        if (query.length == 0) {
-            setIsSearchLoading(false);
-            return;
-        }
-        let isYoutubeURL = false;
-        try {
-            const youtubeURL = new URL(query);
-            if (youtubeURL.hostname.endsWith("youtube.com")) {
-                isYoutubeURL = true;
-            }
-        } catch (error) {
-            isYoutubeURL = false;
-        }
-
-        if (isYoutubeURL) {
-
-        } else {
-            const result = await searchYoutube(query);
-            if (result.isSuccess()) {
-                setYoutubeVideos(result.value);
-            }
-        }
-        setIsSearchLoading(false);
-    }
-
-    function onSelectVideoHandler(videoId: string): void {
-        setVideoId(videoId);
-        setShowSearchResult(false);
-    }
-
     return (
-        <div className="w-full h-screen overflow-auto flex flex-col items-center dark:bg-dark-gray gap-10">
-            {isLoading && <LoadingComponent />}
-            <Header searchHandler={searchHandler} />
-            {
-                showSearchResult ? (
-                    isSearchLoading ? (
-                        <YoutubeVideoListSkeleton />
-                    ) : (
-                        <div className="w-full flex flex-col gap-2">
-                            <div onClick={() => setShowSearchResult(false)} className="w-full px-8 flex items-center gap-2 dark:text-white text-black cursor-pointer hover:underline">
-                                <FaAngleLeft />
-                                <div>Go Back</div>
-                            </div>
-                            <YoutubeVideoList onSelectVideo={onSelectVideoHandler} videos={youtubeVideos} />
-                        </div>
-                    )
-                ) : (
-                    <div className="w-full grid grid-cols-3 px-8 gap-8">
-                        <div className="w-full col-span-2">
-                            {videoId.length > 0 ? (
-                                <VideoPlayer videoId={videoId} isAdmin={(room.admin as User)._id == user._id} room={room} ws={ws.ws} />
-                            ) : (
-                                <div className="w-full flex flex-col items-center text-black dark:text-white font-bold text-2xl bg-light-gray dark:bg-dark-gray-bg rounded-lg border dark:border-zinc-700 py-4">Try searching to get started</div>
-                            )}
-                        </div>
-                        <div className="w-full">
-                            {room._id && <RoomInfo room={room} />}
-                        </div>
+        <App title={`room/${room._id}`}>
+            <div className="w-full h-full overflow-auto flex flex-row dark:bg-zinc-950">
+                <div className="w-1/5 border-r border-[#2a2a2a]">
+                    <RoomActions room={room} />
+                    <div className="w-full h-px min-h-[1px] bg-[#2a2a2a]"></div>
+                    <div className="w-full flex flex-col gap-1 px-2 py-2">
+                        {
+                            views.map((item, index) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        onClick={() => setCurrentView(item.name)}
+                                        className={`px-2 py-2 w-full flex items-center gap-2 cursor-pointer 
+                                            hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-lg
+                                            ${currentView == item.name ? "bg-zinc-800 text-gray-900 dark:text-gray-50" : "dark:text-zinc-500"}`}>
+                                        <item.Icon />
+                                        <div className="capitalize">{item.name}</div>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
-                )
-            }
-        </div>
+                </div>
+                <div className="flex-grow h-full dark:bg-zinc-900">
+                    {currentView == "video player" && <VideoPlayerView room={room} />}
+                    {currentView == "chat" && <ChatView room={room} />}
+                    {currentView == "members" && <MembersView room={room} />}
+                </div>
+            </div>
+        </App>
     )
 }

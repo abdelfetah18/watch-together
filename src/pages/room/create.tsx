@@ -10,6 +10,7 @@ import ToastContext from "@/contexts/ToastContext";
 import LoadingComponent from "@/components/LoadingComponent";
 import InputWithError from "@/components/InputWithError";
 import PasswordInput from "@/components/room/PasswordInput";
+import App from "@/components/Layout/App";
 
 export default function CreateRoom() {
     const router = useRouter();
@@ -121,10 +122,10 @@ export default function CreateRoom() {
     }
 
     return (
-        <div className="w-full h-screen dark:bg-dark-gray flex flex-row">
+        <App title="create room">
             {isLoading && <LoadingComponent />}
             <Navigation selected_label={"Create Room"} />
-            <div className="w-5/6 h-full flex flex-col items-center py-4 overflow-auto">
+            <div className="w-4/5 h-full flex flex-col items-center py-4 overflow-auto">
                 <div className="w-full h-full flex flex-col p-8">
                     <div className="w-full h-full flex flex-col gap-10">
                         <div className="w-full text-2xl font-medium text-gray-900 dark:text-gray-50">Create Room</div>
@@ -232,6 +233,6 @@ export default function CreateRoom() {
                     </div>
                 </div>
             </div>
-        </div>
+        </App>
     )
 }
