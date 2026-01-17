@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeContext.Provider value={themeManager}>
         <LoadingContext.Provider value={loading}>
           <UserContext.Provider value={user}>
-            <Component {...pageProps} />
+            {!themeManager.isLoading && <Component {...pageProps} />}
             <Toast />
             <Loading />
           </UserContext.Provider>

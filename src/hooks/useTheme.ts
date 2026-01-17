@@ -1,28 +1,39 @@
 import { useEffect, useState } from "react";
 
+type Theme = "dark" | "light";
+
 export default function useTheme() {
-    const [theme, setTheme] = useState('light');
+    const [isLoading, setIsLoading] = useState(true);
+    const [theme, setTheme] = useState<Theme>("dark");
 
     useEffect(() => {
-        let theme = localStorage.getItem('theme');
+        setIsLoading(true);
+        const theme = localStorage.getItem("theme");
         if (theme) {
-            setTheme(theme);
-            if (theme == 'dark') {
-                toggleTheme();
-            }
+            setTheme(theme as Theme);
+            initTheme(theme as Theme);
         }
+        setIsLoading(false);
     }, []);
 
-    const toggleTheme = (): void => {
-        let isDark = document.body.classList.toggle('dark');
-        if (!isDark) {
-            localStorage.setItem('theme','light');
-            setTheme('light');
+    const initTheme = (theme: Theme): void => {
+        if (theme == "dark") {
+            document.body.classList.add("dark");
         } else {
-            localStorage.setItem('theme','dark');
-            setTheme('dark');
+            document.body.classList.remove("dark");
         }
     }
 
-    return { theme, toggleTheme };
+    const toggleTheme = (): void => {
+        let isDark = document.body.classList.toggle("dark");
+        if (!isDark) {
+            localStorage.setItem("theme", "light");
+            setTheme("light");
+        } else {
+            localStorage.setItem("theme", "dark");
+            setTheme("dark");
+        }
+    }
+
+    return { isLoading, theme, toggleTheme };
 }
