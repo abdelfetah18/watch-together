@@ -44,3 +44,31 @@ export async function auth(): Promise<Result<string, User>> {
 export function saveUserSession(userSession: UserSession): void {
     localStorage.setItem("user_session", JSON.stringify(userSession));
 }
+
+export async function updateUserProfilePicture(profileImage: File): Promise<Result<string, User>> {
+    try {
+        const formData = new FormData();
+        formData.set("profile_image", profileImage);
+        const response = await axios.post("/api/user/update_profile_image", formData);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}
+
+export async function updateUserProfile(updateUser: UpdateUser): Promise<Result<string, User>> {
+    try {
+        const response = await axios.post("/api/user", updateUser);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.message);
+        }
+    }
+}

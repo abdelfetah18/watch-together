@@ -22,6 +22,15 @@ export default class UserRepository extends Repository {
         return await this.getUserById(user._id);
     }
 
+    async updateUser(userId: string, updateUser: UpdateUser): Promise<User> {
+        const user = await this.sanityClient.patch(userId).set({
+            username: updateUser.username,
+            profile_image: updateUser.profile_image,
+        }).commit();
+
+        return user as unknown as User;
+    }
+
     async getUserByUsername(username: string): Promise<User> {
         const users = await this.sanityClient.fetch<User[]>(`*[
             _type=="user" &&

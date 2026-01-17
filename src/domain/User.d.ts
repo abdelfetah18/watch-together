@@ -11,6 +11,14 @@ interface CreateUser {
     password: string;
 }
 
+interface UpdateUser {
+    username: string;
+    profile_image?: {
+        _type: "image";
+        asset: RefDocument;
+    };
+}
+
 interface UserCredentials {
     username: string;
     password: string;
