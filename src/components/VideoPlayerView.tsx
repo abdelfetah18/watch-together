@@ -1,29 +1,32 @@
-import { useEffect, useState } from "react";
-import VideoPlayer from "@/components/room/VideoPlayer";
-import { FaSearch, FaTimes } from "react-icons/fa";
-import { MdFullscreen } from "react-icons/md";
-import VideoPlayerSearchView from "./VideoPlayerSearchView";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { FaFacebookMessenger, FaTimes } from "react-icons/fa";
 import { RiVideoFill } from "react-icons/ri";
+import { updateVideoPlayerById } from "@/services/VideoPlayerService";
+import YoutubeVideoPlayer from "./room/YoutubeVIdeoPlayer";
+import useTabs from "@/hooks/useTabs";
+import UserContext from "@/contexts/UserContext";
 
 interface VideoPlayerViewProps {
+    videoPlayerRef: any;
     room: Room;
+    videoId: string;
+    setVideoId: Dispatch<SetStateAction<string>>;
+    onReady: () => void;
+    onPlay: () => void;
+    onPause: () => void;
+    onSync: () => void;
+    timestampDiff: number;
 }
 
-export default function VideoPlayerView({ room }: VideoPlayerViewProps) {
-    const [view, setView] = useState("video_player");
-    const [videoId, setVideoId] = useState("");
+export default function VideoPlayerView({ videoPlayerRef, room, videoId, setVideoId, onReady, onPlay, onPause, onSync, timestampDiff }: VideoPlayerViewProps) {
+    const user = useContext(UserContext);
+    const isAdmin = user._id == (room.admin as User)._id;
+    const { goTo } = useTabs();
 
-    useEffect(() => {
-        if (room.video_player) {
-            const videoPlayer = room.video_player as VideoPlayer;
-            setVideoId(videoPlayer.video_id);
-        }
-    }, [room]);
-
-    if (view == "search") {
-        return (
-            <VideoPlayerSearchView selectVideo={(videoId: string) => setVideoId(videoId)} />
-        )
+    const removeVideoPlayerHandler = async (): Promise<void> => {
+        setVideoId("");
+        await updateVideoPlayerById(room._id, room.video_player._id, { video_id: "", is_playing: false, timestamp: 0 });
+        goTo("search");
     }
 
     return (
@@ -34,21 +37,36 @@ export default function VideoPlayerView({ room }: VideoPlayerViewProps) {
                     <div>Video Player</div>
                 </div>
             </div>
-            <div className="w-full flex flex-col items-center overflow-auto">
-                <div className="w-5/6 col-span-2 flex flex-col gap-2 py-8">
-                    {videoId.length > 0 ? (
-                        <>
-                            <VideoPlayer videoId={videoId} room={room} />
-                            <div className="w-full flex items-center justify-center gap-8">
-                                <div onClick={() => setView("search")} className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center text-xl cursor-pointer hover:bg-zinc-800"><FaSearch className="text-white" /></div>
-                                <div className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center text-xl cursor-pointer hover:bg-zinc-800"><FaTimes className="text-white" /></div>
-                                <div className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center text-xl cursor-pointer hover:bg-zinc-800"><MdFullscreen className="text-white" /></div>
+            <div className="w-full flex-grow flex flex-col items-center overflow-auto">
+                {
+                    videoId.length == 0 ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center">
+                            <div className="text-gray-500">
+                                {isAdmin
+                                    ? "No video selected. Go to Search."
+                                    : "No video selected. Wait for admin."}
                             </div>
-                        </>
+                        </div>
                     ) : (
-                        <div className="w-full flex flex-col items-center text-black dark:text-white font-bold text-2xl bg-light-gray dark:bg-dark-gray-bg rounded-lg border dark:border-zinc-700 py-4">Try searching to get started</div>
-                    )}
-                </div>
+                        <div className="w-5/6 col-span-2 flex flex-col gap-2 py-8">
+                            <div className="w-full h-full flex flex-col items-center bg-black rounded-lg aspect-video">
+                                <YoutubeVideoPlayer videoPlayerRef={videoPlayerRef} videoId={videoId} onReady={onReady} onPlay={onPlay} onPause={onPause} />
+                            </div>
+                            {
+                                timestampDiff >= 3 && (
+                                    <div className="flex flex-row items-center gap-2">
+                                        <div className="text-sm text-red-500">{`Video is ${timestampDiff.toFixed(2)} seconds out of sync with admin.`}</div>
+                                        <div onClick={onSync} className="text-sm text-blue-500 underline cursor-pointer">{"Sync now"}</div>
+                                    </div>
+                                )
+                            }
+                            <div className="w-full flex items-center justify-center gap-8">
+                                <div onClick={removeVideoPlayerHandler} className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center text-xl cursor-pointer hover:bg-zinc-800"><FaTimes className="text-white" /></div>
+                                <div onClick={() => goTo("chat")} className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center text-xl cursor-pointer hover:bg-zinc-800"><FaFacebookMessenger className="text-white" /></div>
+                            </div>
+                        </div>
+                    )
+                }
             </div >
         </div >
     )

@@ -61,7 +61,7 @@ export default function YoutubeVideoPlayer({ videoPlayerRef, videoId, onPause, o
         return () => {
             youtubePlayer.destroy();
         }
-    }, [videoId]);
+    }, []);
 
     return (
         <div id="player" className="w-full h-full aspect-video rounded-lg"></div>

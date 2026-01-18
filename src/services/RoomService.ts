@@ -160,3 +160,16 @@ export async function getMembers(roomId: string): Promise<Result<string, RoomMem
         }
     }
 }
+
+export async function updateRoom(roomId: string, updateRoomForm: UpdateRoomForm): Promise<Result<Record<string, string>, Room>> {
+    try {
+        const response = await axios.patch<HttpResponseData<Room>>(`/api/room/${roomId}`, updateRoomForm);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.data);
+        }
+    }
+}

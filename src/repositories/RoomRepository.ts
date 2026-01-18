@@ -26,7 +26,7 @@ export default class RoomRepository extends Repository {
         return await this.getRoomByName(room.name);
     }
 
-    async updateRoomById(id: string, updateRoom: UpdateRoom): Promise<Room> {
+    async updateRoomById(id: string, updateRoom: UpdateRoomForm): Promise<Room> {
         return await this.sanityClient.patch(id).set(updateRoom).commit();
     }
 

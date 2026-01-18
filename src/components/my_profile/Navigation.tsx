@@ -38,7 +38,7 @@ export default function Navigation({ selected_label }: NavigationProps) {
                 <div className="w-full bg-zinc-900 rounded-lg flex flex-row items-center justify-between py-2 px-4">
                     <div className="flex flex-row items-center gap-2">
                         <img
-                            src={user.profile_image.url || "/profile_4_3.png"}
+                            src={user.profile_image?.url || "/profile_4_3.png"}
                             alt="profile picture"
                             className="w-8 aspect-square object-cover rounded-full"
                         />

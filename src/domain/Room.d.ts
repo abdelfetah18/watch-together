@@ -16,7 +16,7 @@ interface Room {
     admin?: User | RefDocument;
     creator?: User | RefDocument;
     categories: (RoomCategory | RefDocument)[];
-    video_player?: VideoPlayer | RefDocument;
+    video_player?: VideoPlayer;
 }
 
 interface CreateRoom {
@@ -30,12 +30,13 @@ interface CreateRoom {
     video_player: RefDocument;
 }
 
-interface UpdateRoom {
+interface UpdateRoomForm {
     name?: string;
     bio?: string;
-    privacy: RoomPrivacy;
+    privacy?: RoomPrivacy;
     password?: string;
     categories?: RefDocument[];
+    video_player?: RefDocument;
 }
 
 interface RoomMember {
