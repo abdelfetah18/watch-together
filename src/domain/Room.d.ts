@@ -30,6 +30,14 @@ interface CreateRoom {
     video_player: RefDocument;
 }
 
+interface CreateRoomForm {
+    name: string;
+    bio: string;
+    password?: string;
+    privacy: RoomPrivacy;
+    categories: RefDocument[];
+}
+
 interface UpdateRoomForm {
     name?: string;
     bio?: string;
