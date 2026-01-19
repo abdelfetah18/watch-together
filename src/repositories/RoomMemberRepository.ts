@@ -17,18 +17,11 @@ export default class RoomMemberRepository extends Repository {
         });
     }
 
-    async deleteRoomMemberById(roomId: string, memberId: string) {
-        const member = await this.sanityClient.fetch(`*[
-            _type == "member" &&
-            room._ref == $roomId &&
-            user._ref == $memberId
-        ]${RoomMemberRepository.DEFAULT_PROPS}`, { roomId, memberId });
-
-        let deleted = null;
-        if (member)
-            deleted = await this.sanityClient.delete(member._id);
-
-        return deleted;
+    async deleteRoomMemberById(roomId: string, memberId: string): Promise<void> {
+        await this.sanityClient.delete({
+            query: `*[_type=="member" && room._ref == $roomId && user._ref == $memberId]`,
+            params: { roomId, memberId }
+        });
     }
 
     async getRoomMembersByRoomId(roomId: string): Promise<Room[]> {

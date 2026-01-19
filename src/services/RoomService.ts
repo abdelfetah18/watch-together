@@ -186,3 +186,16 @@ export async function deleteRoom(roomId: string): Promise<Result<string, Room>> 
         }
     }
 }
+
+export async function leaveRoom(roomId: string): Promise<Result<string, Room>> {
+    try {
+        const response = await axios.post<HttpResponseData<Room>>(`/api/room/${roomId}/leave`);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.data);
+        }
+    }
+}
