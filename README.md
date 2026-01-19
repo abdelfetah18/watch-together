@@ -24,6 +24,7 @@ Its a `NextJS` app with [custom server](https://nextjs.org/docs/advanced-feature
 ![3](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/3.png)
 ![4](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/4.png)
 ![4](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/5.png)
+![4](https://raw.githubusercontent.com/abdelfetah18/watch-together/main/public/6.png)
 
 Thanks for reading and see you in my next project.
 
