@@ -41,4 +41,8 @@ export default class MessagesRepository extends Repository {
 
         return null;
     }
+
+    async deleteRoomMessages(roomId: string): Promise<void> {
+        await this.sanityClient.delete({ query: '*[_type=="messages" && room._ref==$roomId]', params: { roomId } });
+    }
 }

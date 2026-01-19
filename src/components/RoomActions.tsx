@@ -1,13 +1,16 @@
 import ToastContext from "@/contexts/ToastContext";
+import UserContext from "@/contexts/UserContext";
 import { getInviteURL } from "@/services/RoomService";
+import Link from "next/link";
 import { useContext, useEffect, useRef, useState } from "react";
-import { FaAngleDown, FaEdit, FaUserPlus } from "react-icons/fa";
+import { FaAngleDown, FaCog, FaUserPlus } from "react-icons/fa";
 
 interface RoomActionsProps {
     room: Room;
 }
 
 export default function RoomActions({ room }: RoomActionsProps) {
+    const user = useContext(UserContext);
     const toastManager = useContext(ToastContext);
 
     const menuRef = useRef<HTMLDivElement>(null);
@@ -46,15 +49,19 @@ export default function RoomActions({ room }: RoomActionsProps) {
                 {
                     isOpen && (
                         <div className="absolute w-60 left-0 top-full mt-2 bg-gray-200 dark:bg-dark-gray-bg rounded-lg py-2 border border-gray-200 dark:border-zinc-700 z-10">
-                            <div className="w-full flex flex-col gap-2 items-start py-2">
-                                <a href={"/room/" + room._id + "/edit"} className="px-8 py-2 w-full flex items-center gap-4 cursor-pointer text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-zinc-700">
-                                    <FaEdit />
-                                    <div className="text-sm">Edit Room</div>
-                                </a>
-                                <div onClick={copyInviteURLHandler} className="px-8 py-2 w-full flex items-center gap-4 cursor-pointer text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-zinc-700">
-                                    <FaUserPlus />
+                            <div className="w-full flex flex-col items-start">
+                                <div onClick={copyInviteURLHandler} className="px-8 py-2 w-full flex items-center justify-between gap-4 cursor-pointer text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-zinc-700">
                                     <div className="text-sm">Invite Friend</div>
+                                    <FaUserPlus />
                                 </div>
+                                {
+                                    user._id == (room.admin as User)._id && (
+                                        <Link href={"/room/" + room._id + "/settings"} className="px-8 py-2 w-full flex items-center justify-between gap-4 cursor-pointer text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-zinc-700">
+                                            <div className="text-sm">Settings</div>
+                                            <FaCog />
+                                        </Link>
+                                    )
+                                }
                             </div>
                         </div>
                     )

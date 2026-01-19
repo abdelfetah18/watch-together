@@ -45,4 +45,8 @@ export default class RoomMemberRepository extends Repository {
             user._ref == $userId
         ]${RoomMemberRepository.DEFAULT_PROPS}`, { roomId, userId });
     }
+
+    async deleteRoomMembers(roomId: string): Promise<void> {
+        await this.sanityClient.delete({ query: '*[_type=="member" && room._ref==$roomId]', params: { roomId } });
+    }
 }

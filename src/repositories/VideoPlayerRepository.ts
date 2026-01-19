@@ -21,4 +21,8 @@ export default class VideoPlayerRepository extends Repository {
     async updateVideoPlayerById(id: string, updateVideoPlayer: UpdateVideoPlayer): Promise<Room> {
         return await this.sanityClient.patch(id).set(updateVideoPlayer).commit();
     }
+
+    async deleteVideoPlayerById(id: string): Promise<void> {
+        await this.sanityClient.delete(id);
+    }
 }

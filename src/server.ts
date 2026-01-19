@@ -60,6 +60,10 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
+  server.delete("*/*", (req, res) => {
+    return handle(req, res);
+  });
+
   http_server.listen(PORT, () => {
     console.log(`# Running on ${dev ? "Development" : "Production"}`);
     console.log("Server is up runing on port:", PORT);

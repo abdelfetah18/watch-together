@@ -45,6 +45,10 @@ interface UpdateRoomForm {
     password?: string;
     categories?: RefDocument[];
     video_player?: RefDocument;
+    profile_image?: {
+        _type: "image";
+        asset: RefDocument;
+    };
 }
 
 interface RoomMember {

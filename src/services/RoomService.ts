@@ -173,3 +173,16 @@ export async function updateRoom(roomId: string, updateRoomForm: UpdateRoomForm)
         }
     }
 }
+
+export async function deleteRoom(roomId: string): Promise<Result<string, Room>> {
+    try {
+        const response = await axios.delete<HttpResponseData<Room>>(`/api/room/${roomId}`);
+        const body = response.data;
+        return Result.success(body.data);
+    } catch (error) {
+        if (error.response) {
+            const body = error.response.data;
+            return Result.failure(body.data);
+        }
+    }
+}
