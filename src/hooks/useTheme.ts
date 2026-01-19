@@ -11,8 +11,8 @@ export default function useTheme() {
         const theme = localStorage.getItem("theme");
         if (theme) {
             setTheme(theme as Theme);
-            initTheme(theme as Theme);
         }
+        initTheme(theme as Theme);
         setIsLoading(false);
     }, []);
 
