@@ -11,6 +11,10 @@ interface YoutubeVideoPlayerProps {
 class YoutubeVideoPlayerObject implements VideoPlayerObject {
     constructor(private ytPlayer: YT.Player) { }
 
+    destroy() {
+        this.ytPlayer.destroy();
+    }
+
     play() {
         this.ytPlayer.playVideo();
     }

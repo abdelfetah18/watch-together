@@ -28,4 +28,5 @@ interface VideoPlayerObject {
     update(timestamp: number);
     getCurrentTime(): number;
     getPlayerState(): PlayerState;
+    destroy(): void;
 }

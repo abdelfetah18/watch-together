@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, MutableRefObject, SetStateAction, useContext } from "react";
 import { FaFacebookMessenger, FaTimes } from "react-icons/fa";
 import { RiVideoFill } from "react-icons/ri";
 import { updateVideoPlayerById } from "@/services/VideoPlayerService";
@@ -7,7 +7,7 @@ import useTabs from "@/hooks/useTabs";
 import UserContext from "@/contexts/UserContext";
 
 interface VideoPlayerViewProps {
-    videoPlayerRef: any;
+    videoPlayerRef: MutableRefObject<VideoPlayerObject>;
     room: Room;
     videoId: string;
     setVideoId: Dispatch<SetStateAction<string>>;
@@ -24,8 +24,9 @@ export default function VideoPlayerView({ videoPlayerRef, room, videoId, setVide
     const { goTo } = useTabs();
 
     const removeVideoPlayerHandler = async (): Promise<void> => {
-        setVideoId("");
         await updateVideoPlayerById(room._id, room.video_player._id, { video_id: "", is_playing: false, timestamp: 0 });
+        videoPlayerRef. current.destroy();
+        setVideoId("");
         goTo("search");
     }
 
