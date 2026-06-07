@@ -8,7 +8,7 @@ export default function useTheme() {
 
     useEffect(() => {
         setIsLoading(true);
-        const theme = localStorage.getItem("theme");
+        const theme = "dark" // localStorage.getItem("theme");
         if (theme) {
             setTheme(theme as Theme);
         }
